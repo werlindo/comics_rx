@@ -12,3 +12,13 @@ def date_converter(s):
     """
     dates = {date:pd.to_datetime(date) for date in s.unique()}
     return s.map(dates)
+
+
+def cut_issue_num(title_and_num):
+    """Remove #-sign and all characters to the right.
+    
+    Parameters:
+    -----------
+    title_and_num = string representing title, issue num and any other details.
+    """
+    return title_and_num[:title_and_num.rfind('#')].strip()
