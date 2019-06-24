@@ -34,9 +34,9 @@ I will likely use some flavor of AWS RDS to store the structured data. Cleaning 
 If it turns out I will be storing any unstructured data I will likely first turn to use MongoDB Atlas.
 
 #### Prep
-I see two primary tasks:
-Getting purchase/review data into the proper form to create an ALS matrix factorization model to be the basis of the recommendation system.
-Second, organizing purchase or review data, along with any metadata I can find, to support building a cold-start model.
+I see two primary tasks:  
+- Getting purchase/review data into the proper form to create an ALS matrix factorization model to be the basis of the recommendation system.
+- Second, organizing purchase or review data, along with any metadata I can find, to support building a cold-start model.
 
 ### Modeling
 We will holdout out 20% of the purchase/review data for validation; this may be influenced by the breadth of data I am able to procure.
