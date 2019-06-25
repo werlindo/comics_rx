@@ -27,6 +27,9 @@ def cut_issue_num(title_and_num):
     """
     return title_and_num[:title_and_num.rfind('#')].strip()
 
+def make_int(curr_str):
+    """Take a string and make it an int. No error trapping at this time."""
+    return int(curr_str)
 
 #-------------------------------------
 # References
