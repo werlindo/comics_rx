@@ -9,7 +9,8 @@ Build a recommender system to 'prescribe' comics to read/buy/subscribe.
 ### Business Understanding
 I subscribe to comic books at a fanastic local comic shop, [Arcane Comic & More](https://www.arcanecomicbooks.com/), and one of the many awesome services they provide is something they call ‘associations’. These associations are intended to match customers to new titles (e.g. new comic books to be released in the near future) that they may be interested. If you opt-in to assocations, you will be automatically subscribed to these associated titles.
 
-For example:
+For example:  
+
 <img src="assets/assoc_example.png" width=600, align='center'>
 
 In the example above “Savage Avengers” is being recommended to those who subscribe to “Savage Sword of Conan”.
