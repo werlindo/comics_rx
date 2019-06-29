@@ -6,6 +6,8 @@ from pyspark.sql.types import *
 from pyspark.sql.functions import explode, col
 from pyspark.ml.recommendation import ALS, ALSModel
 import pandas as pd
+import itertools
+import time
 
 #-------------------------------------
 # Functions
@@ -13,6 +15,7 @@ import pandas as pd
 def get_top_n_recs_for_user(spark, model, topn=10):
     """
     Given requested n and ALS model, returns top n recommended comics
+    DEPRECATED FOR get_top_n_new_recs
     """
     tgt_acct_id = input()
 
@@ -61,7 +64,8 @@ def get_top_n_new_recs(spark, model, topn=10):
     """
     Given requested n and ALS model, returns top n recommended comics
     """
-    
+    start_time = time.time()
+
     # Multiplicative buffer
     # Get n x topn, because we will screen out previously bought
     buffer = 3
@@ -126,4 +130,66 @@ def get_top_n_new_recs(spark, model, topn=10):
     top_n_df = top_n_df.head(topn)
     top_n_df.index += 1
     
+    print ('Total Runtime: {:.2f} seconds'.format(time.time() - start_time))
+
     return top_n_df
+
+def train_ALS(train, test, evaluator, num_iters, reg_params, ranks, alphas):
+    """
+    Grid Search Function to select the best model based on RMSE of hold-out data
+    Inspired by      
+    https://github.com/KevinLiao159/MyDataSciencePortfolio/blob/master
+            /movie_recommender/movie_recommendation_using_ALS.ipynb
+    """
+
+    # initial
+    min_error = float('inf')
+    best_rank = -1
+    best_regularization = 0
+    best_alpha = 1
+    best_model = None
+    
+    # tuple up the lists
+    combos = [num_iters, reg_params, ranks, alphas]
+    combos_tup = list(itertools.product(*combos))
+    
+    # Loop though combos
+    for tup in combos_tup:
+        num_iter = tup[0]
+        reg = tup[1]
+        rank = tup[2]
+        alpha = tup[3]
+
+        # train ALS model
+        als = ALS(maxIter=num_iter,
+              rank=rank,
+              userCol='account_id',
+              itemCol='comic_id',
+              ratingCol='bought',
+              implicitPrefs=True,
+              regParam=reg,
+              alpha=alpha,
+              coldStartStrategy='drop', #Just for CV
+              seed=41916)
+
+        model = als.fit(train)
+
+        # Generate predictions on Test
+        predictions = model.transform(test)
+        predictions.persist()
+
+        error = evaluator.evaluate(predictions)
+
+        print('{} iterations, '.format(num_iter) + 
+              '{} latent factors, regularization='.format(rank) +
+              '{}, and alpha @ {} : '.format(reg, alpha) +
+              'validation error is {:.4f}'.format(error))
+
+        if error < min_error:
+            best_rank = rank
+            best_regularization = reg
+            best_alpha = alpha
+            best_model = model
+
+    return best_model
+
