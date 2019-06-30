@@ -4,10 +4,12 @@
 import pyspark
 from pyspark.sql.types import *
 from pyspark.sql.functions import explode, col
+from pyspark.sql import DataFrame
 from pyspark.ml.recommendation import ALS, ALSModel
 import pandas as pd
 import itertools
 import time
+from functools import reduce
 
 #-------------------------------------
 # Functions
@@ -63,6 +65,15 @@ def get_top_n_recs_for_user(spark, model, topn=10):
 def get_top_n_new_recs(spark, model, topn=10):
     """
     Given requested n and ALS model, returns top n recommended comics
+    Parameters
+    ----------
+    spark : spark instance
+    model : FITTED ALS model
+    topn : integer for now many results to return
+    
+    Returns
+    -------
+    pandas dataframe of top n comic recommendations
     """
     start_time = time.time()
 
@@ -140,6 +151,18 @@ def train_ALS(train, test, evaluator, num_iters, reg_params, ranks, alphas):
     Inspired by      
     https://github.com/KevinLiao159/MyDataSciencePortfolio/blob/master
             /movie_recommender/movie_recommendation_using_ALS.ipynb
+    Parameters
+    ----------
+    train : pyspark dataframe with training data
+    test : pyspark dataframe with test data
+    num_iters: list of iterations to test
+    reg_params: list of regularization parameters to test
+    ranks: list of # of latent factors to test
+    alphas: list of alphas to test
+    
+    Returns
+    -------
+    fitted alsModel object
     """
 
     # initial
@@ -193,3 +216,89 @@ def train_ALS(train, test, evaluator, num_iters, reg_params, ranks, alphas):
 
     return best_model
 
+def get_spark_k_folds(spark_df, k=5, random_seed=1):
+    """Take a spark df and split it into a list of k folds
+    Parameters
+    ----------
+    spark_df : spark dataframe with dataset to train/test
+    k : number of folds
+    random_seed : if you want to push custom seed through randomSplit
+    Returns
+    -------
+    list of k spark dataframes    
+    """
+    
+    # Initialize dict to hold the folds
+    folds = {}
+
+    # Make copy of input df
+    df = spark_df
+    df.persist()
+    
+    # Loop through k's
+    for i in range(1,k):
+        test = 1/(k-i+1)
+        part_1_nm = 'fold_' + str(i)
+        
+        # Name the train if not on last loop
+        if i != (k-1):
+            part_2_nm = 'train_' + str(i)
+        else:
+            part_2_nm = 'fold_' + str(i+1)
+
+        # Run the splits
+        folds[part_1_nm], folds[part_2_nm] = (
+                                              df.randomSplit(
+                                                  [test, 1-test]
+                                                  ,random_seed
+                                                  )
+                                              )  
+
+        # replace df if not on last loop
+        df = folds[part_2_nm] if i != (k-1) else df 
+
+        # drop the train sets from folds
+        for key in list(folds.keys()):
+            if 'train' in key:
+                folds.pop(key)
+        
+        folds_list = [fold for fold in folds.values()]
+        
+    return folds_list
+
+def get_cv_errors(folds, als, evaluator):
+    """
+    Given dictionary of spark DF folds and an ALS object
+    returns list of errors
+    Parameters
+    ----------
+    folds = list of spark dataframes
+    als = ALS instance
+    evaluator = spark Evaluator instance, usually regression
+    
+    Returns
+    -------
+    list of each test fold's prediction error metric
+    """
+    errors = []
+    
+    for i in range(len(folds)):
+
+        # Partition out train and test
+        test_fold_df = folds[i]
+
+        train_folds = list(set(folds) - set([test_fold_df]))
+        train_fold_df = reduce(DataFrame.unionAll, train_folds)
+     
+        # fit on train
+        model = als.fit(train_fold_df)
+        
+        # get predictions on test
+        preds = model.transform(test_fold_df)
+        
+        # Evaluate test
+        errors.append(evaluator.evaluate(preds))
+        
+        # done
+    return errors
+    
