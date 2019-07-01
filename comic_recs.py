@@ -302,3 +302,154 @@ def get_cv_errors(folds, als, evaluator):
         # done
     return errors
     
+#-------------------------------------
+# New User Support
+#-------------------------------------
+
+def get_comic_ids_for_user(comics_df, read_comics_list):
+    """
+    Given spark DF of existing comics and list of comics to 'match'
+    Return list of like comics from the DF
+    """
+    # Initialize
+    similar_comics_list = []
+    
+    for comic in read_comics_list:
+        # print(comic)
+        # Search for comic in df
+        matched_comics = (comics_df.filter(lower(comics_df['comic_title'])
+                                 .contains(str.lower(comic)))
+                                 .select('comic_id').rdd
+                                 .flatMap(lambda x: x).collect()
+                         )
+        similar_comics_list.extend(matched_comics)
+        
+    return similar_comics_list
+
+def create_acct_id(model_data):
+    """
+    Given model data, create new account id that is just the max existing +1
+    """
+    # Get max account id
+    max_acct_id = model_data.agg({'account_id':'max'}).collect()[0][0]
+
+    # New Account id
+    new_acct_id = max_acct_id + 1
+    
+    return new_acct_id
+
+def add_new_user(model_data, new_comic_ids, new_acct_id):
+    """
+    Given existing model data and the comic ids for new user,
+    add rows for the new user to model data
+    """
+#     # Get max account id
+#     max_acct_id = model_data.agg({'account_id':'max'}).collect()[0][0]
+
+#     # New Account id
+#     new_acct_id = max_acct_id + 1
+    
+    # Create spark Df of new rows
+    new_rows = spark.createDataFrame([
+                (new_acct_id, 1, comic_id) for comic_id in new_comic_ids])
+
+    # Append to existing model data
+    model_data_new = model_data.union(new_rows)
+    
+    return model_data_new
+
+def train_als(model_data, current_params):
+    """
+    Given training data and set of parameters
+    Returns trained ALS model
+    """
+    # Create ALS instance for cv with our chosen parametrs
+    als_train = ALS(maxIter=current_params.get('maxIter'),
+              rank=current_params.get('rank'),
+              userCol='account_id',
+              itemCol='comic_id',
+              ratingCol='bought',
+              implicitPrefs=True,
+              regParam=current_params.get('regParam'),
+              alpha=current_params.get('alpha'),
+              coldStartStrategy='nan', # we want to drop so can get through CV
+              seed=41916)
+
+    model_train = als_train.fit(model_data)
+    return model_train
+
+def get_comics_to_rate(comics_df, training_comic_ids):
+    """
+    Given list of comic ids, 
+    returns list of ids from master list that don't match
+    """
+    new_comic_ids = (comics_df.select('comic_id').distinct()
+                      .filter(~col('comic_id').isin(curr_comic_ids))
+                      .select('comic_id').rdd.flatMap(lambda x: x).collect()
+                     )
+    return new_comic_ids
+
+def recommend_n_comics(top_n, new_comics_ids, account_id, als_model, comics_df):
+    """
+    Given a list of new comics (to the user) and requested number N
+    Return list of N comics, ordered descending by recommendation score
+    """
+
+    # Create spark Df of new rows
+    comics_to_predict = (spark.createDataFrame([
+                        (account_id, 1, comic_id) for comic_id in new_comics_ids])
+                        .select(col('_1').alias('account_id')
+                        ,col('_2').alias('bought')
+                        ,col('_3').alias('comic_id'))
+                        )
+
+    # Get predictions
+    test_preds = als_model.transform(comics_to_predict)
+    test_preds.persist()
+
+    # Alias
+    cdf = comics_df.alias('cdf')
+    tp = test_preds.alias('tp')
+
+    # Query results
+    results = (tp.join(cdf, tp.comic_id==cdf.comic_id)
+                .filter(~isnan(col('prediction')))
+                .orderBy('prediction', ascending=False)
+                .select('comic_title')
+                .limit(top_n)
+              ).toPandas()
+
+    return results
+
+def make_comic_recommendations(read_comics_list, top_n, comics_df, train_data 
+                               ,best_params):
+    """
+    Given a list of comic titles and request for N
+    Return list of comics recommendations as a pandas dataframe
+    """
+    start_time = time.time()
+    
+    # Get best-matching comic IDs
+    train_comic_ids = get_comic_ids_for_user(comics_df, read_comics_list)
+        
+    # Create new account number
+    new_id = create_acct_id(train_data)
+    
+    # Add new account to training data
+    train_data_new = add_new_user(train_data, train_comic_ids, new_id)
+    train_data_new.persist()
+    
+    # Train new ALS model
+    als_model = train_als(train_data_new, best_params)
+    
+    # Get list of comics to rate, exclude those already matched
+    new_comics_ids = get_comics_to_rate(comics_df, train_comic_ids)
+
+    # Get pandas df of top n recommended comics!
+    top_n_comics_df = recommend_n_comics(top_n, new_comics_ids, new_id
+                                        ,als_model
+                                        ,comics_df
+                                        )
+    
+    print ('Total Runtime: {:.2f} seconds'.format(time.time() - start_time))
+    return top_n_comics_df
