@@ -24,7 +24,7 @@ The plan is to build an implicit-ratings matrix based on this information. Becau
 
 The shop has also offered to further research some potentially useful data, such as metadata on the comics (e.g. Publisher / Genre / Writer / Artist ). Metadata such as this may be useful for supporting a potential cold-start model.
 
-To augment, I plan to use Amazon review data, from which we can also build a utility matrix. If it turns out the store data is insufficient or faulty then this will become the primary. In the event the Amazon data is insufficient, I believe there are APIs for comic book metadata communities, such as https://comicbookroundup.com/ or www.comicbookdb.com, where users offer up their own ratings (usually on a scale of 1 to 10).
+To augment, I plan to use Amazon review data, from which we can also build a utility matrix. If it turns out the store data is insufficient or faulty then this will become the primary. In the event the Amazon data is insufficient, I believe there are APIs for comic book metadata communities, such as https://comicvine.gamespot.com/, https://comicbookroundup.com/ or www.comicbookdb.com, where users offer up their own ratings (usually on a scale of 1 to 10).
 
 ### Data Preparation
 I need to perform EDA on the dataset already provided to me and quickly pivot to alternative sources if it is insufficient.
