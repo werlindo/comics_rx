@@ -3,7 +3,7 @@
 #------------------------------------
 import pyspark
 from pyspark.sql.types import *
-from pyspark.sql.functions import explode, col
+from pyspark.sql.functions import explode, col, lower, upper, isnan
 from pyspark.sql import DataFrame
 from pyspark.ml.recommendation import ALS, ALSModel
 import pandas as pd
@@ -338,7 +338,7 @@ def create_acct_id(model_data):
     
     return new_acct_id
 
-def add_new_user(model_data, new_comic_ids, new_acct_id):
+def add_new_user(model_data, new_comic_ids, new_acct_id, spark_instance):
     """
     Given existing model data and the comic ids for new user,
     add rows for the new user to model data
@@ -350,7 +350,7 @@ def add_new_user(model_data, new_comic_ids, new_acct_id):
 #     new_acct_id = max_acct_id + 1
     
     # Create spark Df of new rows
-    new_rows = spark.createDataFrame([
+    new_rows = spark_instance.createDataFrame([
                 (new_acct_id, 1, comic_id) for comic_id in new_comic_ids])
 
     # Append to existing model data
@@ -384,19 +384,20 @@ def get_comics_to_rate(comics_df, training_comic_ids):
     returns list of ids from master list that don't match
     """
     new_comic_ids = (comics_df.select('comic_id').distinct()
-                      .filter(~col('comic_id').isin(curr_comic_ids))
+                      .filter(~col('comic_id').isin(training_comic_ids))
                       .select('comic_id').rdd.flatMap(lambda x: x).collect()
                      )
     return new_comic_ids
 
-def recommend_n_comics(top_n, new_comics_ids, account_id, als_model, comics_df):
+def recommend_n_comics(top_n, new_comics_ids, account_id, als_model
+                       ,comics_df ,spark_instance):
     """
     Given a list of new comics (to the user) and requested number N
     Return list of N comics, ordered descending by recommendation score
     """
 
     # Create spark Df of new rows
-    comics_to_predict = (spark.createDataFrame([
+    comics_to_predict = (spark_instance.createDataFrame([
                         (account_id, 1, comic_id) for comic_id in new_comics_ids])
                         .select(col('_1').alias('account_id')
                         ,col('_2').alias('bought')
@@ -421,8 +422,8 @@ def recommend_n_comics(top_n, new_comics_ids, account_id, als_model, comics_df):
 
     return results
 
-def make_comic_recommendations(read_comics_list, top_n, comics_df, train_data 
-                               ,best_params):
+def make_comic_recommendations(reading_list, top_n, comics_df, train_data 
+                               ,model_params, spark_instance):
     """
     Given a list of comic titles and request for N
     Return list of comics recommendations as a pandas dataframe
@@ -430,17 +431,17 @@ def make_comic_recommendations(read_comics_list, top_n, comics_df, train_data
     start_time = time.time()
     
     # Get best-matching comic IDs
-    train_comic_ids = get_comic_ids_for_user(comics_df, read_comics_list)
+    train_comic_ids = get_comic_ids_for_user(comics_df, reading_list)
         
     # Create new account number
     new_id = create_acct_id(train_data)
     
     # Add new account to training data
-    train_data_new = add_new_user(train_data, train_comic_ids, new_id)
+    train_data_new = add_new_user(train_data, train_comic_ids, new_id, spark_instance)
     train_data_new.persist()
     
     # Train new ALS model
-    als_model = train_als(train_data_new, best_params)
+    als_model = train_als(train_data_new, model_params)
     
     # Get list of comics to rate, exclude those already matched
     new_comics_ids = get_comics_to_rate(comics_df, train_comic_ids)
@@ -449,6 +450,7 @@ def make_comic_recommendations(read_comics_list, top_n, comics_df, train_data
     top_n_comics_df = recommend_n_comics(top_n, new_comics_ids, new_id
                                         ,als_model
                                         ,comics_df
+                                        ,spark_instance
                                         )
     
     print ('Total Runtime: {:.2f} seconds'.format(time.time() - start_time))
