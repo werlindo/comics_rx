@@ -15,7 +15,7 @@ app = Flask(__name__, static_url_path="")
 def index():
     """Return the main page."""
     return render_template(
-        'comics.html',
+        'comic_recs.html',
         #'theme.html',
         #'index.html',
         # words=['whassup', 'dawg']
