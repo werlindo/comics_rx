@@ -65,6 +65,7 @@
     def show_results(response):
         if response.status==200 or response.status==0:
             document["result"].html = response.text
+            document["recommendations"].html = response.text
         else:
             warnings.warn(response.text)
 
@@ -96,7 +97,7 @@
         print(data)
         req.send(data) 
     
-    document['get_recom_button'].bind("click", get_recommendations)   
+    document['recom_button'].bind("click", get_recommendations)   
 
   </script>
 
@@ -141,9 +142,12 @@
         <br>
         
         <!-- <div class = "btn btn-primary btn-xl rounded-pill mt-5" button id="predict_button">Get Recommendations!</div> -->
-        <div class = "btn btn-primary center-block" button id="predict_button">Get Recommendations!</div>
+        <div class = "btn btn-primary center-block" button id="predict_button">Get Prediction.</div>
         <div id="result"></div>
         <!-- <a href="#" id="get_recd" class="btn btn-primary center-block mx-auto">Get Recommendations!</a> -->
+        <br>
+        <div class = "btn btn-primary center-block" button id="recom_button">Get Recommendations!</div>
+        <div id="recommendations"></div>      
         
         <!-- <div class="col-xl-8 col-lg-7">
           <img class="img-fluid mb-3 mb-lg-0" src="img/bg-masthead.jpg" alt="">

@@ -41,5 +41,14 @@ def predict():
     # return jsonify({'probability': round_prediction})
     # return jsonify({'probability': 'Here are some recommendations.'})
     return jsonify({'probability': data['user_input']})
-    
+
+@app.route('/recommend', methods=['GET', 'POST'])
+def recommend():
+    """Return recomendations."""
+    data = request.json
+    # prediction = model.predict_proba([data['user_input']])
+    # round_prediction = round(prediction[0][1], 2)
+    # return jsonify({'probability': round_prediction})
+    # return jsonify({'probability': 'Here are some recommendations.'})
+    return jsonify({'probability': data['user_input']}) 
     
