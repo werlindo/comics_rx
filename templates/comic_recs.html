@@ -4,7 +4,6 @@
 <head>
 
   <!-- wm -->
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
@@ -12,7 +11,7 @@
 
   <title>Comic Book Recommendations, Bub.</title>
   <script type="text/javascript" src="brython.js"></script>
-  <script type="text/javascript" src="brython_stdlib.js"></script>
+  <script type="text/javascript" src="brython_stdlib.js"></script>0
 
   <!-- Bootstrap core CSS -->
   <!-- <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -65,7 +64,14 @@
     def show_results(response):
         if response.status==200 or response.status==0:
             document["result"].html = response.text
-            document["recommendations"].html = response.text
+        else:
+            warnings.warn(response.text)
+
+    def show_rec_results(response):
+        if response.status==200 or response.status==0:
+            rec_data = json.loads(response.text)
+            rec = rec_data['top_rec']
+            document["recommendations"].html = rec
         else:
             warnings.warn(response.text)
 
@@ -76,7 +82,7 @@
         req.open('POST', '/predict', True)
         req.set_header('content-type','application/json')
         data = json.dumps({'user_input': document['user_input'].value})
-        print(data)
+        # print(data)
         req.send(data)
 
     document["predict_button"].bind("click", get_prediction)
@@ -90,11 +96,11 @@
     def get_recommendations(ev):
         """Get recommendations."""
         req = ajax.ajax()
-        req.bind('complete', show_results)
+        req.bind('complete', show_rec_results)
         req.open('POST', '/recommend', True)
         req.set_header('content-type','application/json')
         data = json.dumps({'user_input': document['user_input'].value})
-        print(data)
+        # print(data)
         req.send(data) 
     
     document['recom_button'].bind("click", get_recommendations)   
@@ -133,21 +139,20 @@
       <!-- Featured Project Row -->
       <!-- <div class="row align-items-center no-gutters mb-4 mb-lg-5"> -->
         <div class="intro-heading text-center">Enter what you are reading,
-          <br> formatted as Python list (I know. I know.)
+          <br> formatted as Python list.
         </div>
-    
-        <!-- <h3 class="text-uppercase" style="color:gray"><span> Enter what you are reading,<br> formatted as Python list (I know. I know.) </span></h3>
-        <br><br> -->
         <textarea id="user_input" class="center-block"></textarea>
-        <br>
-        
-        <!-- <div class = "btn btn-primary btn-xl rounded-pill mt-5" button id="predict_button">Get Recommendations!</div> -->
-        <div class = "btn btn-primary center-block" button id="predict_button">Get Prediction.</div>
-        <div id="result"></div>
-        <!-- <a href="#" id="get_recd" class="btn btn-primary center-block mx-auto">Get Recommendations!</a> -->
-        <br>
+          <br>
         <div class = "btn btn-primary center-block" button id="recom_button">Get Recommendations!</div>
         <div id="recommendations"></div>      
+        <!-- <div class = "btn btn-primary center-block" button id="predict_button">Get Prediction.</div>
+        <div id="result"></div>
+        <br> -->
+
+        
+        <!-- <div class = "btn btn-primary btn-xl rounded-pill mt-5" button id="predict_button">Get Recommendations!</div> -->
+        <!-- <a href="#" id="get_recd" class="btn btn-primary center-block mx-auto">Get Recommendations!</a> -->
+      
         
         <!-- <div class="col-xl-8 col-lg-7">
           <img class="img-fluid mb-3 mb-lg-0" src="img/bg-masthead.jpg" alt="">
