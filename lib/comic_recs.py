@@ -1,4 +1,4 @@
-#-------------------------------------
+#------------------------------------
 # Libraries
 #------------------------------------
 import pyspark
@@ -11,7 +11,7 @@ import itertools
 import time
 from functools import reduce
 
-#-------------------------------------
+#------------------------------------
 # Functions
 #------------------------------------
 def get_top_n_recs_for_user(spark, model, topn=10):

@@ -1,3 +1,22 @@
+#------------------------------------
+# Libraries
+#------------------------------------
+import requests
+import random
+import time
+
+# Selenium
+from selenium.webdriver import Firefox
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.firefox.options import Options
+options = Options()
+options.headless = True
+
+#------------------------------------
+# Functions
+#------------------------------------
 def scrape_series_covers(browser, titles):
     """Use Selenium to scrape images for comic book titles"""
     
@@ -13,7 +32,7 @@ def scrape_series_covers(browser, titles):
 #         if not title_search_flag:
 #             search_site(browser, title)
         
-        if not no_results_found():
+        if not no_results_found(browser):
         # Once on search results, just select first issue of results
             click_first_link(browser, title, True)
 
@@ -41,7 +60,7 @@ def scrape_series_covers(browser, titles):
 
 #     print("All done!")
 
-def no_results_found():
+def no_results_found(browser):
     xpath = '/html/body/table/tbody/tr[2]/td[3]'
     result = browser.find_element_by_xpath(xpath)
     return result.text == 'No results found.'
