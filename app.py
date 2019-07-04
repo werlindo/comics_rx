@@ -12,7 +12,7 @@ from pyspark.sql import SparkSession
 
 import ast
 
-import comic_recs as cr
+import lib.comic_recs as cr
 
 # with open('spam_model.pkl', 'rb') as f:
 #     model = pickle.load(f)
