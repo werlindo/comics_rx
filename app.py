@@ -20,14 +20,16 @@ import lib.comic_recs as cr
 app = Flask(__name__, static_url_path="")
 
 # spark config
-spark = SparkSession \
-    .builder \
-    .appName("movie recommendation") \
-    .config("spark.driver.maxResultSize", "1g") \
-    .config("spark.driver.memory", "1g") \
-    .config("spark.executor.memory", "8g") \
-    .config("spark.master", "local[*]") \
-    .getOrCreate()
+# spark = SparkSession \
+#     .builder \
+#     .appName("movie recommendation") \
+#     .config("spark.driver.maxResultSize", "1g") \
+#     .config("spark.driver.memory", "1g") \
+#     .config("spark.executor.memory", "4g") \
+#     .config("spark.master", "local[*]") \
+#     .getOrCreate()
+
+spark = pyspark.sql.SparkSession.builder.master("local[*]").getOrCreate()
 
 comics_df = spark.read.json('support_data/comics.json')
 comics_df.persist()
@@ -37,21 +39,28 @@ comics_sold.persist()
 
 # Create dictionary of candidate parameters
 model_params = {'maxIter': 20
-                 ,'rank': 10
+                 ,'rank': 5
                  ,'regParam': 0.1
-                 ,'alpha': 40
-                 ,'seed': 41916
+                 ,'alpha': 100
+                 ,'seed': 1234
                }
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     """Return the main page."""
+    colours = ['Red', 'Blue', 'Black', 'Orange']
+ 
     return render_template(
         'comic_recs.html',
         #'theme.html',
         #'index.html',
-        words=['whassup', 'dawg']
-    )
+        words=['whassup', 'dawg'],
+        colours=colours
+         )
+
+# def dropdown():
+#     colours = ['Red', 'Blue', 'Black', 'Orange']
+#     return render_template('test.html', colours=colours)
 
 #@app.route("/tables")
 # @app.route("/")
