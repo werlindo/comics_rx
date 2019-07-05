@@ -176,6 +176,9 @@ def train_ALS(train, test, evaluator, num_iters, reg_params, ranks, alphas):
     combos = [num_iters, reg_params, ranks, alphas]
     combos_tup = list(itertools.product(*combos))
     
+    # Init list for list of combos
+    params_errs = []
+    
     # Loop though combos
     for tup in combos_tup:
         num_iter = tup[0]
@@ -208,13 +211,20 @@ def train_ALS(train, test, evaluator, num_iters, reg_params, ranks, alphas):
               '{}, and alpha @ {} : '.format(reg, alpha) +
               'validation error is {:.4f}'.format(error))
 
+        # Save best model to date
         if error < min_error:
             best_rank = rank
             best_regularization = reg
             best_alpha = alpha
             best_model = model
 
-    return best_model
+        # Add error to tuple, append to list of param and their errors
+        tup_list = list(tup)
+ #       print(tup_list)
+        _ = tup_list.append(error)
+        params_errs.append(tup_list)
+            
+    return best_model, params_errs
 
 def get_spark_k_folds(spark_df, k=5, random_seed=1):
     """Take a spark df and split it into a list of k folds
