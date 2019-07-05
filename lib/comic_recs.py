@@ -1,19 +1,14 @@
-#------------------------------------
 # Libraries
-#------------------------------------
-import pyspark
-from pyspark.sql.types import *
-from pyspark.sql.functions import explode, col, lower, upper, isnan
+from pyspark.sql.types import StructType, StructField, LongType
+from pyspark.sql.functions import explode, isnan, col, lower
 from pyspark.sql import DataFrame
-from pyspark.ml.recommendation import ALS, ALSModel
-import pandas as pd
+from pyspark.ml.recommendation import ALS
 import itertools
 import time
 from functools import reduce
 
-#------------------------------------
+
 # Functions
-#------------------------------------
 def get_top_n_recs_for_user(spark, model, topn=10):
     """
     Given requested n and ALS model, returns top n recommended comics
@@ -31,36 +26,37 @@ def get_top_n_recs_for_user(spark, model, topn=10):
     acct_list.append(tgt_list)
 
     # Create one-row spark df
-    tgt_accts = spark.createDataFrame(acct_list, schema=a_schema) 
-
+    tgt_accts = spark.createDataFrame(acct_list, schema=a_schema)
     # Get recommendations for user
     userSubsetRecs = model.recommendForUserSubset(tgt_accts, topn)
     userSubsetRecs.persist()
 
     # Flatten the recs list
-    top_n_exploded = (userSubsetRecs.withColumn('tmp',explode('recommendations'))
-            .select('account_id', col("tmp.comic_id"), col("tmp.rating")))
+    top_n_exploded = (userSubsetRecs.withColumn('tmp',
+                                                explode('recommendations'))
+                      .select('account_id', col("tmp.comic_id"),
+                              col("tmp.rating"))
+                      )
     top_n_exploded.persist()
 
     # Get comics titles
     comics = spark.read.json('raw_data/comics.json')
     comics.persist()
-    
+
     # shorten with alias
     top_n = top_n_exploded.alias('topn')
     com = comics.alias('com')
 
     # Clean up the spark df to list of titles
-    top_n_titles = (top_n.join(com.select('comic_id','comic_title')
-                          ,top_n.comic_id==com.comic_id)
-                 .select('comic_title'))
+    top_n_titles = (top_n.join(com.select('comic_id', 'comic_title'),
+                    top_n.comic_id == com.comic_id).select('comic_title'))
     top_n_titles.persist()
 
     # Cast to pandas df and return it
     top_n_df = top_n_titles.select('*').toPandas()
     top_n_df.index += 1
-    
     return top_n_df
+
 
 def get_top_n_new_recs(spark, model, topn=10):
     """
@@ -70,7 +66,6 @@ def get_top_n_new_recs(spark, model, topn=10):
     spark : spark instance
     model : FITTED ALS model
     topn : integer for now many results to return
-    
     Returns
     -------
     pandas dataframe of top n comic recommendations
@@ -80,7 +75,6 @@ def get_top_n_new_recs(spark, model, topn=10):
     # Multiplicative buffer
     # Get n x topn, because we will screen out previously bought
     buffer = 3
-    
     # Get account number from user
     tgt_acct_id = input()
 
@@ -95,25 +89,27 @@ def get_top_n_new_recs(spark, model, topn=10):
     acct_list.append(tgt_list)
 
     # Create one-row spark df
-    tgt_accts = spark.createDataFrame(acct_list, schema=a_schema) 
-    
+    tgt_accts = spark.createDataFrame(acct_list, schema=a_schema)
+
     # Get recommendations for user
     userSubsetRecs = model.recommendForUserSubset(tgt_accts, (topn*buffer))
     userSubsetRecs.persist()
 
     # Flatten the recs list
-    top_n_exploded = (userSubsetRecs.withColumn('tmp',explode('recommendations'))
-            .select('account_id', col("tmp.comic_id"), col("tmp.rating")))
+    top_n_exploded = (userSubsetRecs.withColumn('tmp',
+                      explode('recommendations'))
+                      .select('account_id',
+                      col("tmp.comic_id"), col("tmp.rating")))
     top_n_exploded.persist()
 
     # Get comics titles
     comics = spark.read.json('raw_data/comics.json')
     comics.persist()
-    
+
     # Get account-comics summary (already bought)
     acct_comics = spark.read.json('support_data/acct_comics.json')
     acct_comics = (
-                    acct_comics.withColumnRenamed('account_id','acct_id')
+                    acct_comics.withColumnRenamed('account_id', 'acct_id')
                     .withColumnRenamed('comic_id', 'cmc_id')
                   )
     acct_comics.persist()
@@ -122,16 +118,14 @@ def get_top_n_new_recs(spark, model, topn=10):
     top_n = top_n_exploded.alias('topn')
     com = comics.alias('com')
     ac = acct_comics.alias('ac')
-    
-
     # Clean up the spark df to list of titles, and only include these
     # that are NOT on bought list
     top_n_titles = (
-                    top_n.join(com.select('comic_id','comic_title')
-                              ,top_n.comic_id==com.comic_id, "left")
-                         .join(ac, [top_n.account_id==ac.acct_id,
-                                        top_n.comic_id==ac.cmc_id], 'left')
-                         .filter('ac.acct_id is null') 
+                    top_n.join(com.select('comic_id', 'comic_title'),
+                               top_n.comic_id == com.comic_id, "left")
+                         .join(ac, [top_n.account_id == ac.acct_id,
+                                    top_n.comic_id == ac.cmc_id], 'left')
+                         .filter('ac.acct_id is null')
                          .select('comic_title')
                    )
     top_n_titles.persist()
@@ -140,15 +134,17 @@ def get_top_n_new_recs(spark, model, topn=10):
     top_n_df = top_n_titles.select('*').toPandas()
     top_n_df = top_n_df.head(topn)
     top_n_df.index += 1
-    
-    print ('Total Runtime: {:.2f} seconds'.format(time.time() - start_time))
+
+    print('Total Runtime: {:.2f} seconds'.format(time.time() - start_time))
 
     return top_n_df
 
+
 def train_ALS(train, test, evaluator, num_iters, reg_params, ranks, alphas):
     """
-    Grid Search Function to select the best model based on RMSE of hold-out data
-    Inspired by      
+    Grid Search Function to select the best model based on RMSE
+    of hold-out data
+    Inspired by
     https://github.com/KevinLiao159/MyDataSciencePortfolio/blob/master
             /movie_recommender/movie_recommendation_using_ALS.ipynb
     Parameters
@@ -159,7 +155,7 @@ def train_ALS(train, test, evaluator, num_iters, reg_params, ranks, alphas):
     reg_params: list of regularization parameters to test
     ranks: list of # of latent factors to test
     alphas: list of alphas to test
-    
+
     Returns
     -------
     fitted alsModel object
@@ -167,18 +163,18 @@ def train_ALS(train, test, evaluator, num_iters, reg_params, ranks, alphas):
 
     # initial
     min_error = float('inf')
-    best_rank = -1
-    best_regularization = 0
-    best_alpha = 1
+    # best_rank = -1
+    # best_regularization = 0
+    # best_alpha = 1
     best_model = None
-    
+
     # tuple up the lists
     combos = [num_iters, reg_params, ranks, alphas]
     combos_tup = list(itertools.product(*combos))
-    
+
     # Init list for list of combos
     params_errs = []
-    
+
     # Loop though combos
     for tup in combos_tup:
         num_iter = tup[0]
@@ -188,15 +184,15 @@ def train_ALS(train, test, evaluator, num_iters, reg_params, ranks, alphas):
 
         # train ALS model
         als = ALS(maxIter=num_iter,
-              rank=rank,
-              userCol='account_id',
-              itemCol='comic_id',
-              ratingCol='bought',
-              implicitPrefs=True,
-              regParam=reg,
-              alpha=alpha,
-              coldStartStrategy='drop', #Just for CV
-              seed=41916)
+                  rank=rank,
+                  userCol='account_id',
+                  itemCol='comic_id',
+                  ratingCol='bought',
+                  implicitPrefs=True,
+                  regParam=reg,
+                  alpha=alpha,
+                  coldStartStrategy='drop',  # Just for CV
+                  seed=41916)
 
         model = als.fit(train)
 
@@ -206,25 +202,25 @@ def train_ALS(train, test, evaluator, num_iters, reg_params, ranks, alphas):
 
         error = evaluator.evaluate(predictions)
 
-        print('{} iterations, '.format(num_iter) + 
+        print('{} iterations, '.format(num_iter) +
               '{} latent factors, regularization='.format(rank) +
               '{}, and alpha @ {} : '.format(reg, alpha) +
               'validation error is {:.4f}'.format(error))
 
         # Save best model to date
         if error < min_error:
-            best_rank = rank
-            best_regularization = reg
-            best_alpha = alpha
+            # best_rank = rank
+            # best_regularization = reg
+            # best_alpha = alpha
             best_model = model
 
         # Add error to tuple, append to list of param and their errors
         tup_list = list(tup)
- #       print(tup_list)
         _ = tup_list.append(error)
         params_errs.append(tup_list)
-            
+
     return best_model, params_errs
+
 
 def get_spark_k_folds(spark_df, k=5, random_seed=1):
     """Take a spark df and split it into a list of k folds
@@ -235,21 +231,21 @@ def get_spark_k_folds(spark_df, k=5, random_seed=1):
     random_seed : if you want to push custom seed through randomSplit
     Returns
     -------
-    list of k spark dataframes    
+    list of k spark dataframes
     """
-    
+
     # Initialize dict to hold the folds
     folds = {}
 
     # Make copy of input df
     df = spark_df
     df.persist()
-    
+
     # Loop through k's
-    for i in range(1,k):
+    for i in range(1, k):
         test = 1/(k-i+1)
         part_1_nm = 'fold_' + str(i)
-        
+
         # Name the train if not on last loop
         if i != (k-1):
             part_2_nm = 'train_' + str(i)
@@ -259,22 +255,22 @@ def get_spark_k_folds(spark_df, k=5, random_seed=1):
         # Run the splits
         folds[part_1_nm], folds[part_2_nm] = (
                                               df.randomSplit(
-                                                  [test, 1-test]
-                                                  ,random_seed
+                                                  [test, 1-test],
+                                                  random_seed
                                                   )
-                                              )  
+                                              )
 
         # replace df if not on last loop
-        df = folds[part_2_nm] if i != (k-1) else df 
+        df = folds[part_2_nm] if i != (k-1) else df
 
         # drop the train sets from folds
         for key in list(folds.keys()):
             if 'train' in key:
                 folds.pop(key)
-        
         folds_list = [fold for fold in folds.values()]
-        
+
     return folds_list
+
 
 def get_cv_errors(folds, als, evaluator):
     """
@@ -285,13 +281,13 @@ def get_cv_errors(folds, als, evaluator):
     folds = list of spark dataframes
     als = ALS instance
     evaluator = spark Evaluator instance, usually regression
-    
+
     Returns
     -------
     list of each test fold's prediction error metric
     """
     errors = []
-    
+
     for i in range(len(folds)):
 
         # Partition out train and test
@@ -299,22 +295,20 @@ def get_cv_errors(folds, als, evaluator):
 
         train_folds = list(set(folds) - set([test_fold_df]))
         train_fold_df = reduce(DataFrame.unionAll, train_folds)
-     
+
         # fit on train
         model = als.fit(train_fold_df)
-        
+
         # get predictions on test
         preds = model.transform(test_fold_df)
-        
+
         # Evaluate test
         errors.append(evaluator.evaluate(preds))
-        
+
         # done
     return errors
-    
-#-------------------------------------
 # New User Support
-#-------------------------------------
+
 
 def get_comic_ids_for_user(comics_df, read_comics_list):
     """
@@ -323,30 +317,31 @@ def get_comic_ids_for_user(comics_df, read_comics_list):
     """
     # Initialize
     similar_comics_list = []
-    
     for comic in read_comics_list:
         # print(comic)
         # Search for comic in df
         matched_comics = (comics_df.filter(lower(comics_df['comic_title'])
-                                 .contains(str.lower(comic)))
-                                 .select('comic_id').rdd
-                                 .flatMap(lambda x: x).collect()
-                         )
+                                           .contains(str.lower(comic)))
+                          .select('comic_id').rdd
+                          .flatMap(lambda x: x).collect()
+                          )
         similar_comics_list.extend(matched_comics)
-        
+
     return similar_comics_list
+
 
 def create_acct_id(model_data):
     """
     Given model data, create new account id that is just the max existing +1
     """
     # Get max account id
-    max_acct_id = model_data.agg({'account_id':'max'}).collect()[0][0]
+    max_acct_id = model_data.agg({'account_id': 'max'}).collect()[0][0]
 
     # New Account id
     new_acct_id = max_acct_id + 1
-    
+
     return new_acct_id
+
 
 def add_new_user(model_data, new_comic_ids, new_acct_id, spark_instance):
     """
@@ -356,17 +351,15 @@ def add_new_user(model_data, new_comic_ids, new_acct_id, spark_instance):
 #     # Get max account id
 #     max_acct_id = model_data.agg({'account_id':'max'}).collect()[0][0]
 
-#     # New Account id
-#     new_acct_id = max_acct_id + 1
-    
     # Create spark Df of new rows
     new_rows = spark_instance.createDataFrame([
                 (new_acct_id, 1, comic_id) for comic_id in new_comic_ids])
 
     # Append to existing model data
     model_data_new = model_data.union(new_rows)
-    
+
     return model_data_new
+
 
 def train_als(model_data, current_params):
     """
@@ -375,32 +368,35 @@ def train_als(model_data, current_params):
     """
     # Create ALS instance for cv with our chosen parametrs
     als_train = ALS(maxIter=current_params.get('maxIter'),
-              rank=current_params.get('rank'),
-              userCol='account_id',
-              itemCol='comic_id',
-              ratingCol='bought',
-              implicitPrefs=True,
-              regParam=current_params.get('regParam'),
-              alpha=current_params.get('alpha'),
-              coldStartStrategy='nan', # we want to drop so can get through CV
-              seed=41916)
+                    rank=current_params.get('rank'),
+                    userCol='account_id',
+                    itemCol='comic_id',
+                    ratingCol='bought',
+                    implicitPrefs=True,
+                    regParam=current_params.get('regParam'),
+                    alpha=current_params.get('alpha'),
+                    coldStartStrategy='nan',  # we want to drop so
+                                              # can get through CV
+                    seed=41916)
 
     model_train = als_train.fit(model_data)
     return model_train
 
+
 def get_comics_to_rate(comics_df, training_comic_ids):
     """
-    Given list of comic ids, 
+    Given list of comic ids,
     returns list of ids from master list that don't match
     """
     new_comic_ids = (comics_df.select('comic_id').distinct()
-                      .filter(~col('comic_id').isin(training_comic_ids))
-                      .select('comic_id').rdd.flatMap(lambda x: x).collect()
+                     .filter(~col('comic_id').isin(training_comic_ids))
+                     .select('comic_id').rdd.flatMap(lambda x: x).collect()
                      )
     return new_comic_ids
 
-def recommend_n_comics(top_n, new_comics_ids, account_id, als_model
-                       ,comics_df ,spark_instance):
+
+def recommend_n_comics(top_n, new_comics_ids, account_id, als_model,
+                       comics_df, spark_instance):
     """
     Given a list of new comics (to the user) and requested number N
     Return list of N comics, ordered descending by recommendation score
@@ -408,11 +404,12 @@ def recommend_n_comics(top_n, new_comics_ids, account_id, als_model
 
     # Create spark Df of new rows
     comics_to_predict = (spark_instance.createDataFrame([
-                        (account_id, 1, comic_id) for comic_id in new_comics_ids])
-                        .select(col('_1').alias('account_id')
-                        ,col('_2').alias('bought')
-                        ,col('_3').alias('comic_id'))
-                        )
+                        (account_id, 1, comic_id)
+                         for comic_id in new_comics_ids])
+                         .select(col('_1').alias('account_id'),
+                         col('_2').alias('bought'),
+                         col('_3').alias('comic_id'))
+                         )
 
     # Get predictions
     test_preds = als_model.transform(comics_to_predict)
@@ -423,45 +420,47 @@ def recommend_n_comics(top_n, new_comics_ids, account_id, als_model
     tp = test_preds.alias('tp')
 
     # Query results
-    results = (tp.join(cdf, tp.comic_id==cdf.comic_id)
-                .filter(~isnan(col('prediction')))
-                .orderBy('prediction', ascending=False)
-                .select('comic_title')
-                .limit(top_n)
-              ).toPandas()
+    results = (tp.join(cdf, tp.comic_id == cdf.comic_id)
+               .filter(~isnan(col('prediction')))
+               .orderBy('prediction', ascending=False)
+               .select('comic_title')
+               .limit(top_n)
+               ).toPandas()
 
     return results
 
-def make_comic_recommendations(reading_list, top_n, comics_df, train_data 
-                               ,model_params, spark_instance):
+
+def make_comic_recommendations(reading_list, top_n, comics_df, train_data,
+                               model_params, spark_instance):
     """
     Given a list of comic titles and request for N
     Return list of comics recommendations as a pandas dataframe
     """
     start_time = time.time()
-    
+
     # Get best-matching comic IDs
     train_comic_ids = get_comic_ids_for_user(comics_df, reading_list)
-        
+
     # Create new account number
     new_id = create_acct_id(train_data)
-    
+
     # Add new account to training data
-    train_data_new = add_new_user(train_data, train_comic_ids, new_id, spark_instance)
+    train_data_new = add_new_user(train_data, train_comic_ids, new_id,
+                                  spark_instance)
     train_data_new.persist()
-    
+
     # Train new ALS model
     als_model = train_als(train_data_new, model_params)
-    
+
     # Get list of comics to rate, exclude those already matched
     new_comics_ids = get_comics_to_rate(comics_df, train_comic_ids)
 
     # Get pandas df of top n recommended comics!
-    top_n_comics_df = recommend_n_comics(top_n, new_comics_ids, new_id
-                                        ,als_model
-                                        ,comics_df
-                                        ,spark_instance
-                                        )
-    
-    print ('Total Runtime: {:.2f} seconds'.format(time.time() - start_time))
+    top_n_comics_df = recommend_n_comics(top_n, new_comics_ids, new_id,
+                                         als_model,
+                                         comics_df,
+                                         spark_instance
+                                         )
+
+    print('Total Runtime: {:.2f} seconds'.format(time.time() - start_time))
     return top_n_comics_df
