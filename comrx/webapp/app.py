@@ -12,7 +12,7 @@ from pyspark.sql import SparkSession
 
 import ast
 
-import lib.comic_recs as cr
+from ..comic_recs import make_comic_recommendations
 
 # with open('spam_model.pkl', 'rb') as f:
 #     model = pickle.load(f)
@@ -31,10 +31,10 @@ app = Flask(__name__, static_url_path="")
 
 spark = pyspark.sql.SparkSession.builder.master("local[*]").getOrCreate()
 
-comics_df = spark.read.json('support_data/comics.json')
+comics_df = spark.read.json('./comrx/dev/support_data/comics.json')
 comics_df.persist()
 
-comics_sold = spark.read.json('raw_data/als_input_filtered.json')
+comics_sold = spark.read.json('./comrx/dev/raw_data/als_input_filtered.json')
 comics_sold.persist()
 
 # Create dictionary of candidate parameters
@@ -93,7 +93,7 @@ def recommend():
     reading_list = ast.literal_eval(data['user_input'])
 
     # Get Recommendations
-    rec_df = cr.make_comic_recommendations(reading_list=reading_list
+    rec_df = make_comic_recommendations(reading_list=reading_list
                                             ,top_n=10
                                             ,comics_df=comics_df
                                             ,train_data=comics_sold
