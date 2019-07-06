@@ -7,8 +7,8 @@ import pickle
 from flask import Flask, request, render_template, jsonify, session, redirect
 
 # Pyspark imports
-import pyspark
-from pyspark.sql import SparkSession
+# import pyspark
+# from pyspark.sql import SparkSession
 
 import ast
 
@@ -20,22 +20,22 @@ from ..comic_recs import make_comic_recommendations
 app = Flask(__name__, static_url_path="")
 
 # spark config
-spark = SparkSession \
-    .builder \
-    .appName("movie recommendation") \
-    .config("spark.driver.maxResultSize", "1g") \
-    .config("spark.driver.memory", "1g") \
-    .config("spark.executor.memory", "4g") \
-    .config("spark.master", "local[*]") \
-    .getOrCreate()
+# spark = SparkSession \
+#     .builder \
+#     .appName("movie recommendation") \
+#     .config("spark.driver.maxResultSize", "1g") \
+#     .config("spark.driver.memory", "1g") \
+#     .config("spark.executor.memory", "4g") \
+#     .config("spark.master", "local[*]") \
+#     .getOrCreate()
 
-spark = pyspark.sql.SparkSession.builder.master("local[*]").getOrCreate()
+# spark = pyspark.sql.SparkSession.builder.master("local[*]").getOrCreate()
 
-comics_df = spark.read.json('./comrx/dev/support_data/comics.json')
-comics_df.persist()
+# comics_df = spark.read.json('./comrx/dev/support_data/comics.json')
+# comics_df.persist()
 
-comics_sold = spark.read.json('./comrx/dev/raw_data/als_input_filtered.json')
-comics_sold.persist()
+# comics_sold = spark.read.json('./comrx/dev/raw_data/als_input_filtered.json')
+# comics_sold.persist()
 
 # Create dictionary of candidate parameters
 model_params = {'maxIter': 20
@@ -101,19 +101,20 @@ def recommend():
     reading_list.append(data['comic_input'])
 
     # Get Recommendations
-    rec_df = make_comic_recommendations(reading_list=reading_list
-                                            ,top_n=10
-                                            ,comics_df=comics_df
-                                            ,train_data=comics_sold
-                                            ,model_params=model_params
-                                            ,spark_instance=spark
-                                            )
+    # rec_df = make_comic_recommendations(reading_list=reading_list
+    #                                         ,top_n=10
+    #                                         ,comics_df=comics_df
+    #                                         ,train_data=comics_sold
+    #                                         ,model_params=model_params
+    #                                         ,spark_instance=spark
+    #                                         )
 
-    top_rec = rec_df.head(1)['comic_title'].values[0]
+    # top_rec = rec_df.head(1)['comic_title'].values[0]
 
     # prediction = model.predict_proba([data['user_input']])
     # round_prediction = round(prediction[0][1], 2)
     # return jsonify({'probability': round_prediction})
     # return jsonify({'probability': 'Here are some recommendations.'})
-    return jsonify({'top_rec': top_rec}) 
+    # return jsonify({'top_rec': top_rec}) 
+    return jsonify({'top_rec': data['comic_input']}) 
     
