@@ -4,7 +4,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 import pickle
-from flask import Flask, request, render_template, jsonify, session, redirect
+from flask import Flask, request, render_template, jsonify, session, redirect, make_response
 
 # Pyspark imports
 # import pyspark
@@ -60,13 +60,13 @@ def index():
         #'theme.html',
         #'index.html',
         # words=['whassup', 'dawg'],
-        # colours=colours,
+        colours=colours,
         titles=titles
          )
 
-def dropdown():
-    colours = ['Red', 'Blue', 'Black', 'Orange']
-    return render_template('test.html', colours=colours)
+# def dropdown():
+#     colours = ['Red', 'Blue', 'Black', 'Orange']
+#     return render_template('test.html', colours=colours)
 
 #@app.route("/tables")
 # @app.route("/")
@@ -116,5 +116,8 @@ def recommend():
     # return jsonify({'probability': round_prediction})
     # return jsonify({'probability': 'Here are some recommendations.'})
     # return jsonify({'top_rec': top_rec}) 
-    return jsonify({'top_rec': data['comic_input']}) 
-    
+    #return jsonify({'top_rec': data['comic_input']}) 
+    comics = pd.read_csv('./comrx/webapp/templates/dev_files/top_100_comics.csv')
+    top_5 = comics.head(5)['comic_title']
+    response = make_response(top_5.to_json(orient='records'))
+    return response
