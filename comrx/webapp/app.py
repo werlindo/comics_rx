@@ -54,15 +54,18 @@ def index():
     comics = pd.read_csv('./comrx/webapp/templates/dev_files/top_100_comics.csv')
     ids = comics['comic_id'].tolist()
     titles = comics['comic_title'].tolist()
+    comics_dd = comics.loc[:,['comic_title','img_url']].copy()
+    #com_deets = comics_dd.to_dict(orient='dict')
+    com_deets = []
+    for i, row in comics_dd.iterrows():
+        com_deets.append((row['comic_title'], row['img_url']))
 
     return render_template(
                            'comic_recs.html',
-                           #'theme.html',
-                           #'index.html',
-                           # words=['whassup', 'dawg'],
                            colours=colours,
                            titles=titles,
-                           rec_data2=rec_data
+                           rec_data2=rec_data,
+                           com_deets=com_deets
                            )
 
 # def dropdown():
@@ -91,8 +94,8 @@ def predict():
     # return jsonify({'probability': 'Here are some recommendations.'})
     return jsonify({'probability': data['user_input']})
 
-@app.route('/recommend', methods=['GET', 'POST'])
-def recommend():
+@app.route('/recommend_old', methods=['GET', 'POST'])
+def recommend_old():
     """Return recomendations."""
     data = request.json
 
@@ -123,8 +126,8 @@ def recommend():
     response = make_response(top_5.to_json(orient='records'))
     return response
 
-@app.route('/pandaser', methods=['GET', 'POST'])
-def pandaser():
+@app.route('/recommend', methods=['GET', 'POST'])
+def recommend():
     """Return recomendations."""
     data = request.json
 
@@ -134,14 +137,5 @@ def pandaser():
     comics = pd.read_csv('./comrx/webapp/templates/dev_files/top_100_comics.csv')
     top_5 = comics.tail(5)
     response = make_response(top_5.to_json(orient='records'))
+
     return response
-#     return render_template(
-#                            'comic_recs.html',
-#                            #'theme.html',
-#                            #'index.html',
-#                            # words=['whassup', 'dawg'],
-#                            #colours=colours,
-#                            #titles=titles,
-#                            rec_data=response
-#                            #rec_data2=top_5.to_json(orient='records')
-#                            ) 

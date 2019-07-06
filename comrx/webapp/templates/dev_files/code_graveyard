@@ -375,3 +375,10 @@
       req.send(data) 
       
     document["df_button"].bind("click", get_panadaser) 
+
+
+      <select id="comic_input_orig" name=comics_select_orig method="GET" >
+        {% for title in titles %}
+        <option value="{{title}}">{{title}}</option>
+        {% endfor %}
+      </select>

@@ -1,101 +1,101 @@
-comic_id,comic_title
-81,Action Comics (DC)
-198,All New X-Men (Marvel)
-224,Amazing Spider-Man (Marvel)
-278,Animal Man (DC)
-319,Aquaman (DC)
-388,Astonishing X-Men (Marvel)
-433,Avengers (2010) (Marvel)
-455,Avengers (Marvel)
-552,Batgirl (DC)
-610,Batman (DC)
-619,Batman Eternal (DC)
-648,Batman Superman (DC)
-578,Batman and Robin (DC)
-691,Batwoman (DC)
-804,Black Hammer (Dark Horse)
-829,Black Panther (Marvel)
-838,Black Science (Image)
-960,Brightest Day (DC)
-992,Btvs Season 9 Freefall (Dark Horse)
-1077,Captain America (Marvel)
-1143,Catwoman (DC)
-1214,Chew (Image)
-1345,Convergence (DC)
-1492,Daredevil (Marvel)
-1560,Darth Vader (Marvel)
-1709,Deadpool (Marvel)
-1801,Descender (Image)
-1807,Detective Comics (DC)
-1906,Doctor Strange (Marvel)
-1963,Doomsday Clock (DC)
-2041,East of West (Image)
-2171,Fables (Vertigo)
-2217,Fantastic Four (Marvel)
-2228,Fatale (Image)
-2281,Ff (Marvel)
-2318,Flash (DC)
-2680,God Is Dead (Avatar)
-2763,Green Arrow (DC)
-2783,Green Lantern (DC)
-2779,Green Lantern Corps (DC)
-2842,Guardians of Galaxy (Marvel)
-2939,Harley Quinn (DC)
-2950,Harrow County (Dark Horse)
-2975,Hawkeye (Marvel)
-3386,Invader Zim (Oni)
-3388,Invincible (Image)
-3390,Invincible Iron Man (Marvel)
-3568,Journey Into Mystery (Marvel)
-3630,Justice League (DC)
-3643,Justice League of America (DC)
-3700,Kill Or Be Killed (Image)
-3820,Lazarus (Image)
-3982,Lumberjanes (Boom)
-4028,Manhattan Projects (Image)
-4248,Mighty Thor (Marvel)
-4316,Moon Knight (Marvel)
-4351,Ms Marvel (Marvel)
-4455,New Avengers (Marvel)
-4503,Nightwing (DC)
-4632,Old Man Logan (Marvel)
-4677,Outcast By Kirkman & Azaceta (Image)
-4701,Paper Girls (Image)
-4919,Rachel Rising (Other)
-5196,Saga (Image)
-5212,Sandman Overture (Vertigo)
-5238,Scalped (Vertigo)
-5284,Secret Avengers (Marvel)
-5286,Secret Empire (Marvel)
-5318,Secret Wars (Marvel)
-5348,Sex Criminals (Image)
-5506,Sixth Gun (Oni)
-5600,Southern Bastards (Image)
-5659,Spider-Man Deadpool (Marvel)
-5836,Star Wars (Dark Horse)
-5882,Star Wars (Marvel)
-6019,Supergirl (DC)
-6036,Superior Spider-Man (Marvel)
-6052,Superman (DC)
-6069,Superman Unchained (DC)
-6099,Swamp Thing (DC)
-6105,Sweet Tooth (Vertigo)
-6175,Teen Titans (DC)
-6243,Thief of Thieves (Image)
-6262,Thor (Marvel)
-6260,Thor God of Thunder (Marvel)
-6667,Ultimate Comics Spider-Man (Marvel)
-6681,Unbeatable Squirrel Girl (Marvel)
-6684,Uncanny Avengers (Marvel)
-6692,Uncanny X-Force (Marvel)
-6694,Uncanny X-Men (Marvel)
-6722,Unwritten (Vertigo)
-6761,Venom (Marvel)
-6824,Walking Dead (Image)
-6937,Wicked & Divine (Image)
-6987,Wolverine and X-Men (Marvel)
-7021,Wonder Woman (DC)
-7079,X-Factor (Marvel)
-7126,X-Men (Marvel)
-7125,X-Men Legacy (Marvel)
-7193,Zombie Tramp Ongoing (Other)
+comic_id,comic_title,img_url
+81,Action Comics (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/action_comics.jpg
+198,All New X-Men (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/all_new_x-men.jpg
+224,Amazing Spider-Man (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/amazing_spider-man.jpg
+278,Animal Man (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/animal_man.jpg
+319,Aquaman (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/aquaman.jpg
+388,Astonishing X-Men (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/astonishing_x-men.jpg
+433,Avengers (2010) (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/_no_cover_.jpg
+455,Avengers (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/avengers.jpg
+552,Batgirl (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/batgirl.jpg
+610,Batman (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/batman.jpg
+619,Batman Eternal (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/batman_eternal.jpg
+648,Batman Superman (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/batman_superman.jpg
+578,Batman and Robin (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/batman_and_robin.jpg
+691,Batwoman (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/batwoman.jpg
+804,Black Hammer (Dark Horse),https://comrx.s3-us-west-2.amazonaws.com/covers/black_hammer.jpg
+829,Black Panther (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/black_panther.jpg
+838,Black Science (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/black_science.jpg
+960,Brightest Day (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/brightest_day.jpg
+992,Btvs Season 9 Freefall (Dark Horse),https://comrx.s3-us-west-2.amazonaws.com/covers/_no_cover_.jpg
+1077,Captain America (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/captain_america.jpg
+1143,Catwoman (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/catwoman.jpg
+1214,Chew (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/chew.jpg
+1345,Convergence (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/convergence.jpg
+1492,Daredevil (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/daredevil.jpg
+1560,Darth Vader (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/darth_vader.jpg
+1709,Deadpool (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/deadpool.jpg
+1801,Descender (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/descender.jpg
+1807,Detective Comics (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/detective_comics.jpg
+1906,Doctor Strange (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/doctor_strange.jpg
+1963,Doomsday Clock (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/doomsday_clock.jpg
+2041,East of West (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/east_of_west.jpg
+2171,Fables (Vertigo),https://comrx.s3-us-west-2.amazonaws.com/covers/fables.jpg
+2217,Fantastic Four (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/fantastic_four.jpg
+2228,Fatale (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/fatale.jpg
+2281,Ff (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/ff.jpg
+2318,Flash (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/flash.jpg
+2680,God Is Dead (Avatar),https://comrx.s3-us-west-2.amazonaws.com/covers/god_is_dead.jpg
+2763,Green Arrow (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/green_arrow.jpg
+2783,Green Lantern (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/green_lantern.jpg
+2779,Green Lantern Corps (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/green_lantern_corps.jpg
+2842,Guardians of Galaxy (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/guardians_of_galaxy.jpg
+2939,Harley Quinn (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/_no_cover_.jpg
+2950,Harrow County (Dark Horse),https://comrx.s3-us-west-2.amazonaws.com/covers/harrow_county.jpg
+2975,Hawkeye (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/hawkeye.jpg
+3386,Invader Zim (Oni),https://comrx.s3-us-west-2.amazonaws.com/covers/invader_zim.jpg
+3388,Invincible (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/invincible.jpg
+3390,Invincible Iron Man (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/invincible_iron_man.jpg
+3568,Journey Into Mystery (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/journey_into_mystery.jpg
+3630,Justice League (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/justice_league.jpg
+3643,Justice League of America (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/justice_league_of_america.jpg
+3700,Kill Or Be Killed (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/kill_or_be_killed.jpg
+3820,Lazarus (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/lazarus.jpg
+3982,Lumberjanes (Boom),https://comrx.s3-us-west-2.amazonaws.com/covers/lumberjanes.jpg
+4028,Manhattan Projects (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/manhattan_projects.jpg
+4248,Mighty Thor (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/mighty_thor.jpg
+4316,Moon Knight (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/moon_knight.jpg
+4351,Ms Marvel (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/ms_marvel.jpg
+4455,New Avengers (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/new_avengers.jpg
+4503,Nightwing (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/nightwing.jpg
+4632,Old Man Logan (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/old_man_logan.jpg
+4677,Outcast By Kirkman & Azaceta (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/_no_cover_.jpg
+4701,Paper Girls (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/paper_girls.jpg
+4919,Rachel Rising (Other),https://comrx.s3-us-west-2.amazonaws.com/covers/rachel_rising.jpg
+5196,Saga (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/saga.jpg
+5212,Sandman Overture (Vertigo),https://comrx.s3-us-west-2.amazonaws.com/covers/sandman_overture.jpg
+5238,Scalped (Vertigo),https://comrx.s3-us-west-2.amazonaws.com/covers/scalped.jpg
+5284,Secret Avengers (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/secret_avengers.jpg
+5286,Secret Empire (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/secret_empire.jpg
+5318,Secret Wars (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/secret_wars.jpg
+5348,Sex Criminals (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/sex_criminals.jpg
+5506,Sixth Gun (Oni),https://comrx.s3-us-west-2.amazonaws.com/covers/sixth_gun.jpg
+5600,Southern Bastards (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/southern_bastards.jpg
+5659,Spider-Man Deadpool (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/spider-man_deadpool.jpg
+5836,Star Wars (Dark Horse),https://comrx.s3-us-west-2.amazonaws.com/covers/star_wars.jpg
+5882,Star Wars (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/star_wars.jpg
+5992,Suicide Squad (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/suicide_squad.jpg
+6019,Supergirl (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/supergirl.jpg
+6036,Superior Spider-Man (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/superior_spider-man.jpg
+6052,Superman (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/superman.jpg
+6069,Superman Unchained (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/superman_unchained.jpg
+6099,Swamp Thing (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/swamp_thing.jpg
+6105,Sweet Tooth (Vertigo),https://comrx.s3-us-west-2.amazonaws.com/covers/sweet_tooth.jpg
+6175,Teen Titans (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/teen_titans.jpg
+6243,Thief of Thieves (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/thief_of_thieves.jpg
+6262,Thor (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/thor.jpg
+6260,Thor God of Thunder (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/thor_god_of_thunder.jpg
+6667,Ultimate Comics Spider-Man (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/ultimate_comics_spider-man.jpg
+6681,Unbeatable Squirrel Girl (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/unbeatable_squirrel_girl.jpg
+6684,Uncanny Avengers (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/uncanny_avengers.jpg
+6692,Uncanny X-Force (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/uncanny_x-force.jpg
+6694,Uncanny X-Men (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/uncanny_x-men.jpg
+6722,Unwritten (Vertigo),https://comrx.s3-us-west-2.amazonaws.com/covers/unwritten.jpg
+6761,Venom (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/venom.jpg
+6824,Walking Dead (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/walking_dead.jpg
+6937,Wicked & Divine (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/_no_cover_.jpg
+6987,Wolverine and X-Men (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/wolverine_and_x-men.jpg
+7021,Wonder Woman (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/wonder_woman.jpg
+7079,X-Factor (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/x-factor.jpg
+7126,X-Men (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/x-men.jpg
+7125,X-Men Legacy (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/x-men_legacy.jpg

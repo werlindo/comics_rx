@@ -13,6 +13,8 @@
   <script type="text/javascript" src="brython.js"></script>
   <script type="text/javascript" src="brython_stdlib.js"></script>
 
+  <!-- My Custom CSS -->
+
   <!-- Bootstrap core CSS -->
   <!-- <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
   <!-- <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -30,6 +32,7 @@
   <!-- Custom styles for this template -->
   <!-- <link href="css/grayscale.min.css" rel="stylesheet"> -->
   <link href="css/grayscale.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
 
 </head>
 
@@ -74,52 +77,47 @@
         else:
             warnings.warn(response.text)
 
-    def get_recommendations(ev):
+    def get_recommendations_old(ev):
         """Get recommendations."""
         req = ajax.ajax()
         req.bind('complete', show_rec_results)
-        req.open('POST', '/recommend', True)
+        req.open('POST', '/recommend_old', True)
         req.set_header('content-type','application/json')
-        # data = json.dumps({'user_input': document['user_input'].value})
         data = json.dumps({'comic_input': document['comic_input'].value})
-        # print(data)
         req.send(data) 
         
-    document["recom_button"].bind("click", get_recommendations)   
+    document["recom_button_old"].bind("click", get_recommendations_old)   
 
-    def show_pandaser(response):
+    def show_recommendations(response):
         if response.status==200 or response.status==0:
-            pandar = json.loads(response.text)
+            recs = json.loads(response.text)
             cards = '<div class="row">'
-            for pan in pandar:
+            for rec in recs:
               this_card = ( '<div class="col-md-4 mb-3 mb-md-0">' + 
-                                            '<div class="card py-4 h-100">' +
+                                            '<div class="card mx-auto" style="width: 18rem;">' +
                                               '<div class="card-body text-center">' +
-                                                '<h4 class="text-uppercase m-0">' + str(pan['comic_title']) + '</h4>' + 
+                                                '<h4 class="text-uppercase m-0">' + str(rec['comic_title']) + '</h4>' + 
+                                                '<img class="card-img-top" src="' + str(rec['img_url']) + '" alt="">' + 
                                                 '<hr class="my-4"></div></div></div>'
                                         ) 
               cards = cards + this_card
             cards = cards + '</div>'
-            document["deef"].html = cards
-            #for pan in pandar:
-            #  document["deef"].html = pan
-            
-              #document["deef"].alert("bleh")
+            document["recs"].html = cards
         else:
             warnings.warn(response.text)
-        return pandar
+        return recs
 
-    def get_panadaser(ev):
-      req = ajax.ajax()
-      req.bind('complete', show_pandaser)
-      req.open('POST', '/pandaser', True)
-      req.set_header('content-type','application/json')
-      data = json.dumps({'comic_input': document['comic_input'].value})
-      req.send(data) 
+    def get_recommendations(ev):
+        """Get recommendations."""
+        req = ajax.ajax()
+        req.bind('complete', show_recommendations)
+        req.open('POST', '/recommend', True)
+        req.set_header('content-type','application/json')
+        data = json.dumps({'comic_input': document['comic_input'].value})
+        req.send(data) 
 
-    document["df_button"].bind("click", get_panadaser) 
-    
-
+    document["recom_button"].bind("click", get_recommendations) 
+  
   </script>
 
   <!-- Header -->
@@ -133,26 +131,54 @@
       </div>
     </div>
   </header>
+
   <!-- Projects Section -->
   <section id="projects" class="projects-section bg-light">
-    <div class="container align-items-center">
+    <div class="container align-items-center text-center">
       <!-- User Input - Comic 1 -->
       <h1>Select Your Favorite Comic!</h1>
-      <select id="comic_input" name=comics_select method="GET" action="/">
-        {% for title in titles %}
-        <option value="{{title}}" SELECTED>{{title}}</option>
-        {% endfor %}
-      </select>
+
+      <div class="row align-items-center">
+          <div class="card mx-auto" style="width: 20rem;">
+            <div class="card-body align-items-center">
+              <!-- <h5 class="card-title">Wut {{rec2}}</h5> -->
+              <!-- <p class="card-text">REPLACE WITH IMAGE</p> -->
+              <!-- <img class="card-img-top" src="https://comrx.s3-us-west-2.amazonaws.com/covers/wonder_woman.jpg" alt="Card image cap"> -->
+              <select id="comic_input" name=comics_select method="GET" action="/" onchange="document.getElementById('preview').src = this.value">
+                {% for deet in com_deets %}
+                <option value="{{deet[1]}}">{{deet[0]}}</option>
+                {% endfor %}
+              </select>
+              <br><br>
+              <img class="mx-auto d-block card-img-top" id="preview">
+            </div>
+          </div>
+        </div>
+      <br><br><br>
+
       <!--Recommendation Button-->
       <br><br>
       <div class="btn btn-primary center-block" button id="recom_button">Get Recommendations!</div>
-      <div id="recommendations"></div>
+      <br><br>
+      <div class="container">
+          <div id="recs"></div>
+      </div>
       <br><br>
 
+      <hr>
+
+      <!--Recommendation Button OLD-->
       <br><br>
-      <div class="btn btn-primary center-block" button id="df_button">Get DataFrame!</div>
-      <div id="deef"></div>
+      <div class="btn btn-primary align-items-center" button id="recom_button_old">Get Recommendations (OLD)!</div>
+      <div id="recommendations_old"></div>
       <br><br>
+
+
+
+
+
+
+
 
       <div class="row">
         {% if pandar %}
