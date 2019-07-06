@@ -43,9 +43,6 @@
     def show_rec_results(response):
         if response.status==200 or response.status==0:
             rec_data = json.loads(response.text)
-           
-            #document["recommendations"].html = "Oh Well."
-            #document["recommendations"].html = rec_data
             
             # Reset Results
             document["recommendations"].html = ""
@@ -72,6 +69,7 @@
             # Now we add the table to the new div previously created
             newdiv <= table + html.BR()
             
+            # Return final table to the document
             reccy <= newdiv
         else:
             warnings.warn(response.text)
@@ -86,9 +84,37 @@
         data = json.dumps({'comic_input': document['comic_input'].value})
         # print(data)
         req.send(data) 
-  
         
     document["recom_button"].bind("click", get_recommendations)   
+
+    def show_pandaser(response):
+        if response.status==200 or response.status==0:
+            pandar = json.loads(response.text)
+            document["deef"].html = ( '<div class="col-md-4 mb-3 mb-md-0">' + 
+                                          '<div class="card py-4 h-100">' +
+                                            '<div class="card-body text-center">' +
+                                              '<h4 class="text-uppercase m-0">' + str(pandar[0]['comic_title']) + '</h4>' + 
+                                              '<hr class="my-4"></div></div></div>'
+                                      ) 
+            
+            #for pan in pandar:
+            #  document["deef"].html = pan
+            
+              #document["deef"].alert("bleh")
+        else:
+            warnings.warn(response.text)
+        return pandar
+
+    def get_panadaser(ev):
+      req = ajax.ajax()
+      req.bind('complete', show_pandaser)
+      req.open('POST', '/pandaser', True)
+      req.set_header('content-type','application/json')
+      data = json.dumps({'comic_input': document['comic_input'].value})
+      req.send(data) 
+
+    document["df_button"].bind("click", get_panadaser) 
+    
 
   </script>
 
@@ -119,6 +145,26 @@
       <div id="recommendations"></div>
       <br><br>
 
+      <br><br>
+      <div class="btn btn-primary center-block" button id="df_button">Get DataFrame!</div>
+      <div id="deef"></div>
+      <br><br>
+
+      <div class="row">
+        {% if pandar %}
+        {% for rec2 in pandar %}
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Wut {{rec2}}</h5>
+            <!-- <p class="card-text">REPLACE WITH IMAGE</p> -->
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+          </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+
       <!--Cards for Recommendations?-->
       <div class="container">
 
@@ -146,22 +192,24 @@
 
       <br><br>
 
-      <!--Row of Results?-->
       <div class="row">
         {% for colour in colours %}
-
-
         <div class="card" style="width: 18rem;">
-          <img class="card-img-top" src="..." alt="Card image cap">
           <div class="card-body">
             <h5 class="card-title">{{colour}}</h5>
-            <p class="card-text">REPLACE WITH IMAGE</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            <!-- <p class="card-text">REPLACE WITH IMAGE</p> -->
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
           </div>
         </div>
-
         {% endfor %}
       </div>
+
+
+
+
+
+
 
 
       <br><br><br>

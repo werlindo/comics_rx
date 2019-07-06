@@ -62,7 +62,7 @@ def index():
                            # words=['whassup', 'dawg'],
                            colours=colours,
                            titles=titles,
-                           rec_data2=rec_data
+                           rec_data=rec_data
                            )
 
 # def dropdown():
@@ -135,13 +135,3 @@ def pandaser():
     top_5 = comics.tail(5)
     response = make_response(top_5.to_json(orient='records'))
     return response
-#     return render_template(
-#                            'comic_recs.html',
-#                            #'theme.html',
-#                            #'index.html',
-#                            # words=['whassup', 'dawg'],
-#                            #colours=colours,
-#                            #titles=titles,
-#                            rec_data=response
-#                            #rec_data2=top_5.to_json(orient='records')
-#                            ) 
