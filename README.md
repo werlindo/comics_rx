@@ -11,7 +11,7 @@ I subscribe to comic books at a fanastic local comic shop, [Arcane Comic & More]
 
 **For example: 
 
-<img src="assets/assoc_example.png" width=600, align='center'>
+<img src="./comrx/dev/assets/assoc_example.png" width=600, align='center'>
 
 In the example above “Savage Avengers” is being recommended to those who subscribe to “Savage Sword of Conan”.
 
