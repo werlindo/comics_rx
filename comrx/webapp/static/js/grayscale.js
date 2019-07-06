@@ -70,4 +70,8 @@
     });
   });
 
+  $('#dd_comics').on('show.bs.dropdown', function () {
+    // do something…
+  })
+
 })(jQuery); // End of use strict

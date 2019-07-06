@@ -20,14 +20,14 @@ from ..comic_recs import make_comic_recommendations
 app = Flask(__name__, static_url_path="")
 
 # spark config
-# spark = SparkSession \
-#     .builder \
-#     .appName("movie recommendation") \
-#     .config("spark.driver.maxResultSize", "1g") \
-#     .config("spark.driver.memory", "1g") \
-#     .config("spark.executor.memory", "4g") \
-#     .config("spark.master", "local[*]") \
-#     .getOrCreate()
+spark = SparkSession \
+    .builder \
+    .appName("movie recommendation") \
+    .config("spark.driver.maxResultSize", "1g") \
+    .config("spark.driver.memory", "1g") \
+    .config("spark.executor.memory", "4g") \
+    .config("spark.master", "local[*]") \
+    .getOrCreate()
 
 spark = pyspark.sql.SparkSession.builder.master("local[*]").getOrCreate()
 
@@ -50,17 +50,23 @@ def index():
     """Return the main page."""
     colours = ['Red', 'Blue', 'Black', 'Orange']
  
+    # Get lists for comic ids and titles
+    comics = pd.read_csv('./comrx/webapp/templates/dev_files/top_100_comics.csv')
+    ids = comics['comic_id'].tolist()
+    titles = comics['comic_title'].tolist()
+
     return render_template(
         'comic_recs.html',
         #'theme.html',
         #'index.html',
-        words=['whassup', 'dawg'],
-        colours=colours
+        # words=['whassup', 'dawg'],
+        # colours=colours,
+        titles=titles
          )
 
-# def dropdown():
-#     colours = ['Red', 'Blue', 'Black', 'Orange']
-#     return render_template('test.html', colours=colours)
+def dropdown():
+    colours = ['Red', 'Blue', 'Black', 'Orange']
+    return render_template('test.html', colours=colours)
 
 #@app.route("/tables")
 # @app.route("/")
@@ -90,7 +96,9 @@ def recommend():
     data = request.json
 
     # Interpret string as literal list
-    reading_list = ast.literal_eval(data['user_input'])
+    #reading_list = ast.literal_eval(data['comic_input'])
+    reading_list = []
+    reading_list.append(data['comic_input'])
 
     # Get Recommendations
     rec_df = make_comic_recommendations(reading_list=reading_list
