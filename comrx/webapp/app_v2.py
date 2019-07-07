@@ -7,43 +7,40 @@ import pickle
 from flask import Flask, request, render_template, jsonify, session, redirect, make_response
 
 # Pyspark imports
-# import pyspark
-# from pyspark.sql import SparkSession
+import pyspark
+from pyspark.sql import SparkSession
 
 import ast
 
 from ..comic_recs import make_comic_recommendations
-from ..comrx import make_n_comic_recommendations
 
 app = Flask(__name__, static_url_path="")
 
 # spark config
-# spark = SparkSession \
-#     .builder \
-#     .appName("movie recommendation") \
-#     .config("spark.driver.maxResultSize", "1g") \
-#     .config("spark.driver.memory", "1g") \
-#     .config("spark.executor.memory", "4g") \
-#     .config("spark.master", "local[*]") \
-#     .getOrCreate()
+spark = SparkSession \
+    .builder \
+    .appName("movie recommendation") \
+    .config("spark.driver.maxResultSize", "1g") \
+    .config("spark.driver.memory", "1g") \
+    .config("spark.executor.memory", "4g") \
+    .config("spark.master", "local[*]") \
+    .getOrCreate()
 
 # spark = pyspark.sql.SparkSession.builder.master("local[*]").getOrCreate()
 
-# comics_df = spark.read.json('./comrx/dev/support_data/comics.json')
-# comics_df.persist()
+comics_df = spark.read.json('./comrx/dev/support_data/comics.json')
+comics_df.persist()
 
-# comics_sold = spark.read.json('./comrx/dev/raw_data/als_input_filtered.json')
-# comics_sold.persist()
+comics_sold = spark.read.json('./comrx/dev/raw_data/als_input_filtered.json')
+comics_sold.persist()
 
 # Create dictionary of candidate parameters
-# model_params = {'maxIter': 10
-#                  ,'rank': 5
-#                  ,'regParam': 0.1
-#                  ,'alpha': 100
-#                  ,'seed': 1234
-#                }
-
-comic_factors = pd.read_pickle('./comrx/dev/support_data/comics_factors.pkl')
+model_params = {'maxIter': 10
+                 ,'rank': 5
+                 ,'regParam': 0.1
+                 ,'alpha': 100
+                 ,'seed': 1234
+               }
 
 @app.route('/', methods=['GET'])
 def index():
@@ -136,25 +133,20 @@ def recommend():
     data = request.json
 
     reading_list = []
-    reading_list.append(int(data['comic_input']))
-    # reading_list.append(45)
+    reading_list.append(data['comic_input'])
 
     # Get Recommendations
-    # rec_df = make_comic_recommendations(reading_list=reading_list
-    #                                         ,top_n=20
-    #                                         ,comics_df=comics_df
-    #                                         ,train_data=comics_sold
-    #                                         ,model_params=model_params
-    #                                         ,spark_instance=spark
-    #                                         )
+    rec_df = make_comic_recommendations(reading_list=reading_list
+                                            ,top_n=20
+                                            ,comics_df=comics_df
+                                            ,train_data=comics_sold
+                                            ,model_params=model_params
+                                            ,spark_instance=spark
+                                            )
 
-    results = make_n_comic_recommendations(comics=reading_list, 
-                                           comic_factors=comic_factors, 
-                                           top_n=6)
-
-    # comics = pd.read_csv('./comrx/webapp/templates/dev_files/top_100_comics.csv')
-    # top_5 = comics.tail(5)
-    # #response = make_response(top_5.to_json(orient='records'))
-    response = make_response(results.to_json(orient='records'))
+    comics = pd.read_csv('./comrx/webapp/templates/dev_files/top_100_comics.csv')
+    top_5 = comics.tail(5)
+    #response = make_response(top_5.to_json(orient='records'))
+    response = make_response(rec_df.to_json(orient='records'))
 
     return response

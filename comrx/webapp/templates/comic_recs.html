@@ -108,7 +108,7 @@
               <!-- onchange="document.getElementById('preview').src = this.foo" -->
             <select id="comic_input" name=comics_select method="GET" action="/" >
               {% for deet in com_deets %}
-              <option value="{{deet[1]}}" data-comic_id = {{deet[0]}} data-url="{{deet[2]}}">{{deet[1]}}</option>
+              <option value="{{deet[0]}}" data-comic_id = {{deet[0]}} data-url="{{deet[2]}}">{{deet[1]}}</option>
               {% endfor %}
             </select>
             <br><br>
