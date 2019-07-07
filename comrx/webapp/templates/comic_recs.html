@@ -72,7 +72,14 @@
         req.send(data) 
 
     document["recom_button"].bind("click", get_recommendations) 
-  
+
+    #def get_img_url(ev):
+    #    uurl = dict_urls['document['comic_input'].value]
+    #    document['preview'].src = uurl                                                
+
+    #document["comic_input"].bind("change", get_img_url)
+
+
   </script>
 
   <!-- Header -->
@@ -96,8 +103,8 @@
       <div class="row align-items-center">
         <div class="card mx-auto" style="width: 20rem;">
           <div class="card-body align-items-center">
-            <select id="comic_input" name=comics_select method="GET" action="/"
-              onchange="document.getElementById('preview').src = this.value">
+            <select id="comic_input" name=comics_select method="GET" action="/">
+              <!-- onchange="document.getElementById('preview').src = this.value"> -->
               {% for deet in com_deets %}
               <option value="{{deet[0]}}">{{deet[0]}}</option>
               {% endfor %}

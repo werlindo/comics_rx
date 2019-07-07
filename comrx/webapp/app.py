@@ -56,13 +56,16 @@ def index():
     com_deets = []
     for i, row in comics_dd.iterrows():
         com_deets.append((row['comic_title'], row['img_url']))
+    
+    dict_urls = dict(com_deets)
 
     return render_template(
                            'comic_recs.html',
                            colours=colours,
                            titles=titles,
                            rec_data2=rec_data,
-                           com_deets=com_deets
+                           com_deets=com_deets,
+                           dict_urls=dict_urls
                            )
 
 # def dropdown():
