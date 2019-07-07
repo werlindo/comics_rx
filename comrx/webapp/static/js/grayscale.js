@@ -15,6 +15,7 @@
     }
   });
 
+  
   // Closes responsive menu when a scroll trigger link is clicked
   $('.js-scroll-trigger').click(function() {
     $('.navbar-collapse').collapse('hide');
@@ -41,6 +42,19 @@
 
 
   // Werlindo
+  
+  // $('select').change(function(){
+  //   var selected = $(this).find('option:selected');
+  //  $('#text').html(selected.text()); 
+  //  $('#value').html(selected.val()); 
+  //  $('#foo').html(selected.data('foo')); 
+  //  $('#url').html(selected.data('url')); 
+   
+  // }).change();
+  
+  
+  
+  
   $("#first-choice").change(function() {
 
     var $dropdown = $(this);

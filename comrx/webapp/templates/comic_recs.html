@@ -103,10 +103,12 @@
       <div class="row align-items-center">
         <div class="card mx-auto" style="width: 20rem;">
           <div class="card-body align-items-center">
-            <select id="comic_input" name=comics_select method="GET" action="/">
-              <!-- onchange="document.getElementById('preview').src = this.value"> -->
+              <!-- onchange="setImage(this);" -->
+              <!-- onchange="document.getElementById('preview').src = this.options[this.selectedIndex].data-foo" -->
+              <!-- onchange="document.getElementById('preview').src = this.foo" -->
+            <select id="comic_input" name=comics_select method="GET" action="/" >
               {% for deet in com_deets %}
-              <option value="{{deet[0]}}">{{deet[0]}}</option>
+              <option value="{{deet[0]}}" data-foo="{{deet[1]}}">{{deet[0]}}</option>
               {% endfor %}
             </select>
             <br><br>
@@ -114,6 +116,7 @@
           </div>
         </div>
       </div>
+      <!-- <p>The selected item is <span id="text"></span> with a value of <span id="value"></span> and foo of <span id="foo"></span>.</p> -->
       <br><br><br>
       <!--Recommendation Button-->
       <br><br>
@@ -153,17 +156,22 @@
     </div>
   </footer>
 
+
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
 
+
   <!-- Plugin JavaScript -->
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
   <!-- Custom scripts for this template -->
   <script src="js/grayscale.min.js"></script>
+
+  <script src="js/comrx.js"></script>
+
 
   <!-- This is the part where I break my page -->
   <!-- Optional JavaScript -->
