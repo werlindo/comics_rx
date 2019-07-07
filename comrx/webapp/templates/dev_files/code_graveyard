@@ -382,3 +382,127 @@
         <option value="{{title}}">{{title}}</option>
         {% endfor %}
       </select>
+
+
+      <!--Recommendation Button OLD-->
+      <br><br>
+      <div class="btn btn-primary align-items-center" button id="recom_button_old">Get Recommendations (OLD)!</div>
+      <div id="recommendations_old"></div>
+      <br><br>
+
+      <div class="row">
+        {% if pandar %}
+        {% for rec2 in pandar %}
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Wut {{rec2}}</h5>
+            <!-- <p class="card-text">REPLACE WITH IMAGE</p> -->
+            <img class="card-img-top" src="https://comrx.s3-us-west-2.amazonaws.com/covers/wonder_woman.jpg" alt="Card image cap">
+            <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+          </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+
+      <!--Cards for Recommendations?-->
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-md-4 mb-3 mb-md-0">
+            <div class="card py-4 h-100">
+              <div class="card-body text-center">
+                <h4 class="text-uppercase m-0">Comic Title 0</h4>
+                <hr class="my-4">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-3 mb-md-0">
+            <div class="card py-4 h-100">
+              <div class="card-body text-center">
+                <h4 class="text-uppercase m-0">Comic Title 1</h4>
+                <hr class="my-4">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <br><br>
+
+
+
+            <!--Recommendation Button OLD-->
+      <br><br>
+      <div class="btn btn-primary align-items-center" button id="recom_button_old">Get Recommendations (OLD)!</div>
+      <div id="recommendations_old"></div>
+      <br><br>
+
+
+
+
+
+
+
+
+      <div class="row">
+        {% if pandar %}
+        {% for rec2 in pandar %}
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Wut {{rec2}}</h5>
+            <!-- <p class="card-text">REPLACE WITH IMAGE</p> -->
+            <img class="card-img-top" src="https://comrx.s3-us-west-2.amazonaws.com/covers/wonder_woman.jpg" alt="Card image cap">
+            <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+          </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+
+      <!--Cards for Recommendations?-->
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-md-4 mb-3 mb-md-0">
+            <div class="card py-4 h-100">
+              <div class="card-body text-center">
+                <h4 class="text-uppercase m-0">Comic Title 0</h4>
+                <hr class="my-4">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-3 mb-md-0">
+            <div class="card py-4 h-100">
+              <div class="card-body text-center">
+                <h4 class="text-uppercase m-0">Comic Title 1</h4>
+                <hr class="my-4">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <br><br>
+
+      <div class="row">
+        {% for colour in colours %}
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">{{colour}}</h5>
+            <!-- <p class="card-text">REPLACE WITH IMAGE</p> -->
+            <img class="card-img-top" src="https://comrx.s3-us-west-2.amazonaws.com/covers/wonder_woman.jpg" alt="Card image cap">
+            <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+
+
+
+
