@@ -96,9 +96,6 @@
       <div class="row align-items-center">
           <div class="card mx-auto" style="width: 20rem;">
             <div class="card-body align-items-center">
-              <!-- <h5 class="card-title">Wut {{rec2}}</h5> -->
-              <!-- <p class="card-text">REPLACE WITH IMAGE</p> -->
-              <!-- <img class="card-img-top" src="https://comrx.s3-us-west-2.amazonaws.com/covers/wonder_woman.jpg" alt="Card image cap"> -->
               <select id="comic_input" name=comics_select method="GET" action="/" onchange="document.getElementById('preview').src = this.value">
                 {% for deet in com_deets %}
                 <option value="{{deet[1]}}">{{deet[0]}}</option>
@@ -106,7 +103,6 @@
               </select>
               <br><br>
               <img class="mx-auto d-block card-img-top" id="preview">
-              <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
             </div>
           </div>
         </div>
@@ -117,26 +113,8 @@
       <br><br>
       <div id="recs"></div>
       <br><br>
-
-
       <hr>
-
-
-      <!--Recommendation Button OLD-->
- 
-
-
-
-
-
-
-
-
-      <!--Cards for Recommendations?-->
-
-
       <br><br>
-      <br><br><br>
     </div>
   </section>
 
@@ -153,12 +131,17 @@
       </div>
 
     </div>
+
   </section>
 
   <!-- Footer -->
-  <footer class="bg-black small text-center text-white-50">
+  <footer class="bg-black large text-center text-white-50">
     <div class="container">
       Copyright &copy; Werlindo Mangrobang 2019
+      <br><br><br><br>
+      <div class="small text-white-50">
+          Cover Photo by Lena Rose on Unsplash
+      </div>
     </div>
   </footer>
 
