@@ -506,3 +506,47 @@
 
 
 
+    def show_rec_results(response):
+        if response.status==200 or response.status==0:
+            rec_data = json.loads(response.text)
+            
+            # Reset Results
+            document["recommendations"].html = ""
+
+            # All the elements will be inserted in the div with the "container" id
+            reccy = document['recommendations']
+
+            # We create a new div element
+            newdiv = html.DIV(id = "new-div")
+            # Now we add some style
+            #newdiv.style = {"padding": "5px", 
+            #              "backgroundColor": "#ADD8E6"}
+
+            # Now, lets add a table with a column with numbers and a
+            # column with a word on each cell
+
+            table = html.TABLE()
+            for com_title in rec_data:
+                table <= html.TR(html.TD(com_title))
+            # Now we add some style to the table
+            #table.style = {"padding": "5px", 
+            #              "backgroundColor": "#aaaaaa",
+            #              "width": "100%"}
+            # Now we add the table to the new div previously created
+            newdiv <= table + html.BR()
+            
+            # Return final table to the document
+            reccy <= newdiv
+        else:
+            warnings.warn(response.text)
+
+    def get_recommendations_old(ev):
+        """Get recommendations."""
+        req = ajax.ajax()
+        req.bind('complete', show_rec_results)
+        req.open('POST', '/recommend_old', True)
+        req.set_header('content-type','application/json')
+        data = json.dumps({'comic_input': document['comic_input'].value})
+        req.send(data) 
+        
+    document["recom_button_old"].bind("click", get_recommendations_old)   

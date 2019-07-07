@@ -94,18 +94,19 @@
       <h1>Select Your Favorite Comic!</h1>
 
       <div class="row align-items-center">
-          <div class="card mx-auto" style="width: 20rem;">
-            <div class="card-body align-items-center">
-              <select id="comic_input" name=comics_select method="GET" action="/" onchange="document.getElementById('preview').src = this.value">
-                {% for deet in com_deets %}
-                <option value="{{deet[1]}}">{{deet[0]}}</option>
-                {% endfor %}
-              </select>
-              <br><br>
-              <img class="mx-auto d-block card-img-top" id="preview">
-            </div>
+        <div class="card mx-auto" style="width: 20rem;">
+          <div class="card-body align-items-center">
+            <select id="comic_input" name=comics_select method="GET" action="/"
+              onchange="document.getElementById('preview').src = this.value">
+              {% for deet in com_deets %}
+              <option value="{{deet[0]}}">{{deet[0]}}</option>
+              {% endfor %}
+            </select>
+            <br><br>
+            <img class="mx-auto d-block card-img-top" id="preview">
           </div>
         </div>
+      </div>
       <br><br><br>
       <!--Recommendation Button-->
       <br><br>
@@ -140,7 +141,7 @@
       Copyright &copy; Werlindo Mangrobang 2019
       <br><br><br><br>
       <div class="small text-white-50">
-          Cover Photo by Lena Rose on Unsplash
+        Cover Photo by Lena Rose on Unsplash
       </div>
     </div>
   </footer>
