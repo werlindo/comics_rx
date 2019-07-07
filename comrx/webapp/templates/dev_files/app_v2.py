@@ -7,35 +7,38 @@ import pickle
 from flask import Flask, request, render_template, jsonify, session, redirect, make_response
 
 # Pyspark imports
-import pyspark
-from pyspark.sql import SparkSession
+# import pyspark
+# from pyspark.sql import SparkSession
 
 import ast
 
 from ..comic_recs import make_comic_recommendations
 
+# with open('spam_model.pkl', 'rb') as f:
+#     model = pickle.load(f)
+
 app = Flask(__name__, static_url_path="")
 
 # spark config
-spark = SparkSession \
-    .builder \
-    .appName("movie recommendation") \
-    .config("spark.driver.maxResultSize", "1g") \
-    .config("spark.driver.memory", "1g") \
-    .config("spark.executor.memory", "4g") \
-    .config("spark.master", "local[*]") \
-    .getOrCreate()
+# spark = SparkSession \
+#     .builder \
+#     .appName("movie recommendation") \
+#     .config("spark.driver.maxResultSize", "1g") \
+#     .config("spark.driver.memory", "1g") \
+#     .config("spark.executor.memory", "4g") \
+#     .config("spark.master", "local[*]") \
+#     .getOrCreate()
 
 # spark = pyspark.sql.SparkSession.builder.master("local[*]").getOrCreate()
 
-comics_df = spark.read.json('./comrx/dev/support_data/comics.json')
-comics_df.persist()
+# comics_df = spark.read.json('./comrx/dev/support_data/comics.json')
+# comics_df.persist()
 
-comics_sold = spark.read.json('./comrx/dev/raw_data/als_input_filtered.json')
-comics_sold.persist()
+# comics_sold = spark.read.json('./comrx/dev/raw_data/als_input_filtered.json')
+# comics_sold.persist()
 
 # Create dictionary of candidate parameters
-model_params = {'maxIter': 10
+model_params = {'maxIter': 20
                  ,'rank': 5
                  ,'regParam': 0.1
                  ,'alpha': 100
@@ -51,18 +54,15 @@ def index():
     comics = pd.read_csv('./comrx/webapp/templates/dev_files/top_100_comics.csv')
     ids = comics['comic_id'].tolist()
     titles = comics['comic_title'].tolist()
-    comics_dd = comics.loc[:,['comic_title','img_url']].copy()
-    #com_deets = comics_dd.to_dict(orient='dict')
-    com_deets = []
-    for i, row in comics_dd.iterrows():
-        com_deets.append((row['comic_title'], row['img_url']))
 
     return render_template(
                            'comic_recs.html',
+                           #'theme.html',
+                           #'index.html',
+                           # words=['whassup', 'dawg'],
                            colours=colours,
                            titles=titles,
-                           rec_data2=rec_data,
-                           com_deets=com_deets
+                           rec_data=rec_data
                            )
 
 # def dropdown():
@@ -91,8 +91,8 @@ def predict():
     # return jsonify({'probability': 'Here are some recommendations.'})
     return jsonify({'probability': data['user_input']})
 
-@app.route('/recommend_old', methods=['GET', 'POST'])
-def recommend_old():
+@app.route('/recommend', methods=['GET', 'POST'])
+def recommend():
     """Return recomendations."""
     data = request.json
 
@@ -123,26 +123,15 @@ def recommend_old():
     response = make_response(top_5.to_json(orient='records'))
     return response
 
-@app.route('/recommend', methods=['GET', 'POST'])
-def recommend():
+@app.route('/pandaser', methods=['GET', 'POST'])
+def pandaser():
     """Return recomendations."""
     data = request.json
 
     reading_list = []
     reading_list.append(data['comic_input'])
 
-    # Get Recommendations
-    rec_df = make_comic_recommendations(reading_list=reading_list
-                                            ,top_n=20
-                                            ,comics_df=comics_df
-                                            ,train_data=comics_sold
-                                            ,model_params=model_params
-                                            ,spark_instance=spark
-                                            )
-
     comics = pd.read_csv('./comrx/webapp/templates/dev_files/top_100_comics.csv')
     top_5 = comics.tail(5)
-    #response = make_response(top_5.to_json(orient='records'))
-    response = make_response(rec_df.to_json(orient='records'))
-
+    response = make_response(top_5.to_json(orient='records'))
     return response

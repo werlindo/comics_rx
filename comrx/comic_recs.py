@@ -423,7 +423,7 @@ def recommend_n_comics(top_n, new_comics_ids, account_id, als_model,
     results = (tp.join(cdf, tp.comic_id == cdf.comic_id)
                .filter(~isnan(col('prediction')))
                .orderBy('prediction', ascending=False)
-               .select('comic_title')
+               .select('comic_title', 'img_url')
                .limit(top_n)
                ).toPandas()
 

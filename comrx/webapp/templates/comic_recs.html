@@ -13,6 +13,8 @@
   <script type="text/javascript" src="brython.js"></script>
   <script type="text/javascript" src="brython_stdlib.js"></script>
 
+  <!-- My Custom CSS -->
+
   <!-- Bootstrap core CSS -->
   <!-- <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
   <!-- <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -22,68 +24,55 @@
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
   <!-- <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet"> -->
   <link href="https://fonts.googleapis.com/css?family=Nunito+display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Hind&display=swap" rel="stylesheet">  
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Hind&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+    rel="stylesheet">
 
   <!-- Custom styles for this template -->
   <!-- <link href="css/grayscale.min.css" rel="stylesheet"> -->
   <link href="css/grayscale.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
 
 </head>
 
 <body id="page-top" onload="brython(1)">
-  <!-- Navigation -->
-  <!-- <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-    <div class="container">
-      <a class="navbar-brand js-scroll-trigger" href="#page-top">Start Bootstrap</a>
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        Menu
-        <i class="fas fa-bars"></i>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#about">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#projects">Projects</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#signup">Contact</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav> -->
 
   <script type="text/python3">
-    from browser import document, ajax
+    from browser import document, ajax, html
     import json
     import warnings
 
-    def show_rec_results(response):
+    def show_recommendations(response):
         if response.status==200 or response.status==0:
-            rec_data = json.loads(response.text)
-            rec = rec_data['top_rec']
-            document["recommendations"].html = rec
+            recs = json.loads(response.text)
+            cards = '<div class="row">'
+            for rec in recs:
+              this_card = ( '<div class="col-md-4 mb-3 mb-md-0">' + 
+                                            '<div class="card mx-auto" style="width: 18rem;">' +
+                                              '<div class="card-body text-center">' +
+                                                '<h4 class="text-uppercase m-0">' + str(rec['comic_title']) + '</h4>' + 
+                                                '<img class="card-img-top" src="' + str(rec['img_url']) + '" alt="">' + 
+                                                '<hr class="my-4"></div></div></div>'
+                                        ) 
+              cards = cards + this_card
+            cards = cards + '</div>'
+            document["recs"].html = cards
         else:
             warnings.warn(response.text)
-
+        return recs
 
     def get_recommendations(ev):
         """Get recommendations."""
         req = ajax.ajax()
-        req.bind('complete', show_rec_results)
+        req.bind('complete', show_recommendations)
         req.open('POST', '/recommend', True)
         req.set_header('content-type','application/json')
-        # data = json.dumps({'user_input': document['user_input'].value})
         data = json.dumps({'comic_input': document['comic_input'].value})
-        # print(data)
         req.send(data) 
-  
-        
-    document["recom_button"].bind("click", get_recommendations)   
 
+    document["recom_button"].bind("click", get_recommendations) 
+  
   </script>
 
   <!-- Header -->
@@ -91,376 +80,69 @@
     <div class="container d-flex h-100 align-items-center">
       <div class="mx-auto text-center">
         <h1 class="mx-auto my-0 text-uppercase">Comic Book Recommender</h1>
-        <h2 class="text-white-50 mx-auto mt-2 mb-5">Tell us what you are reading,<br> we'll tell you what you should!</h2>
+        <h2 class="text-white-50 mx-auto mt-2 mb-5">Tell us what you are reading,<br> we'll tell you what you should!
+        </h2>
         <a href="#projects" class="btn btn-primary js-scroll-trigger">Assemble Your Recommendations</a>
       </div>
     </div>
   </header>
 
-  <!-- About Section -->
-  <!-- <section id="about" class="about-section text-center">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 mx-auto">
-          <h2 class="text-white mb-4">PUT THE APP HERE</h2>
-          <p class="text-white-50">This is where we'll put the app...!!
-            <a href="http://startbootstrap.com/template-overviews/grayscale/">Wow a link</a>. And this is more text.</p>
-        </div>
-      </div>
-      <img src="img/ipad.png" class="img-fluid" alt="">
-    </div>
-  </section> -->
-
   <!-- Projects Section -->
   <section id="projects" class="projects-section bg-light">
-    <div class="container align-items-center">
-      <!-- Featured Project Row -->
+    <div class="container align-items-center text-center">
       <!-- User Input - Comic 1 -->
+      <h1>Select Your Favorite Comic!</h1>
 
-        <h2>Select Your Favorite Comic!</h2>
-
-      <select id="comic_input" name=comics_select method="GET" action="/">
-        {% for title in titles %}
-        <option value= "{{title}}" SELECTED>{{title}}</option>
-        <!-- <option value= "{{title}}" SELECTED>{{title}}</option> -->
-        {% endfor %}
-      </select> 
-
-      <!--BIG BUTTON-->
-      <br><br>
-      <div class = "btn btn-primary center-block" button id="recom_button">Get Recommendations!</div>
-      <div id="recommendations"></div>      
-      <br><br>
-
-      <!-- https://css-tricks.com/dynamic-dropdowns/ -->
-      <div class="row">
-        <div class="card" style="width: 18rem;">
-          <img class="card-img-top" src="..." alt="Card image cap">
-          <div class="card-body">
-            <h5 class="card-title">I love this comic!</h5>
-            <p class="card-text">REPLACE WITH IMAGE</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+      <div class="row align-items-center">
+        <div class="card mx-auto" style="width: 20rem;">
+          <div class="card-body align-items-center">
+            <select id="comic_input" name=comics_select method="GET" action="/"
+              onchange="document.getElementById('preview').src = this.value">
+              {% for deet in com_deets %}
+              <option value="{{deet[0]}}">{{deet[0]}}</option>
+              {% endfor %}
+            </select>
+            <br><br>
+            <img class="mx-auto d-block card-img-top" id="preview">
           </div>
         </div>
       </div>
       <br><br><br>
-      <h1>Version 1 Input</h1>
+      <!--Recommendation Button-->
       <br><br>
-      <textarea id="user_input" class="center-block"></textarea>
+      <div class="btn btn-primary center-block" button id="recom_button">Get Recommendations!</div>
       <br><br>
-      <!-- <select id="comic_select"></select> -->
-
-      <h1>BELOW HERE IS TESTING STUFF</h1>
-
-      <div class="intro-heading text-lg">Enter what you are reading,
-          <br> formatted as Python list.
-      </div>
-  
-          <!-- <input class="chosen-search-input" type="text" autocomplete="off" tabindex="2"> -->
-  
-
-
-
-      <select id="first-choice">
-        <option selected value="base">Please Select</option>
-        <option value="beverages">Beverages</option>
-        <option value="snacks">Snacks</option>
-      </select>
-      
+      <div id="recs"></div>
       <br><br>
-      
-      <select id="second-choice">
-        <option>Please choose from above</option>
-      </select>
-
-      <select name=colours method="GET" action="/">
-        {% for colour in colours %}
-        <option value= "{{colour}}" SELECTED>{{colour}}</option>"
-        {% endfor %}
-      </select> 
-
-      <br><br><br>
-      <div class="row">
-        <table border='1'>
-          <thead>
-           <tr>
-             <th>Date</th>
-             <th>DPC</th>
-             <th>TOTAL</th>
-             <th>Success</th>
-           </tr>
-          </thead>
-          <tbody>
-             <tr>
-                {% for col in rows %}
-                    <td>{{ col }}</td>
-                {% endfor %}
-             </tr>
-          </tbody>
-        </table>
-      </div>
-
-    <div class='container'>
-      {% for colour in colours %}
-     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonz" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        {{ colour }}
-      </button>
-      <!-- <td>{{ col }}</td> -->
-      {% endfor %}
-    </div>
-
-    <div class='container'>
-        <div>
-            <select id="fave0" data-placeholder="Choose a podcast.." class="chosen-select-deselect full-width" tabindex="-1" style="display: none;">
-                <option value=""></option>
-                
-                <option value="1052">"A Tale of Two Cities" Audiobook (Audio book)</option>
-                
-                <option value="1056">"Adventures of Huckleberry Finn" Audiobook (Audio book)</option>
-                
-                <option value="1297">"He's Just Not That Into You: Ten Chick Flick Cliches that are NOT in this movie"</option>
-                
-                <option value="1387">"Walking The Floor" with Chris Shiflett</option>
-                
-            </select><div class="chosen-container chosen-container-single chosen-with-drop chosen-container-active" title="" id="fave0_chosen" style="width: 168px;"><a class="chosen-single chosen-default">
-
-          <span>Choose a podcast..</span>
-          <div><b></b></div>
-          </a>
-          <div class="chosen-drop">
-          <div class="chosen-search">
-          <input class="chosen-search-input" type="text" autocomplete="off" tabindex="2"></div>
-          <ul class="chosen-results"><li class="active-result highlighted" data-option-array-index="1" style="">"A Tale of Two Cities" Audiobook (Audio book)</li><li class="active-result" data-option-array-index="2" style="">"Adventures of Huckleberry Finn" Audiobook (Audio book)</li><li class="active-result" data-option-array-index="3" style="">"He's Just Not That Into You: Ten Chick Flick Cliches that are NOT in this movie"</li><li class="active-result" data-option-array-index="4" style="">"Walking The Floor" with Chris Shiflett</li></ul>
-          </div>
-          </div>
-        </div>    
-
-    </div>
-
-
-
-        <!-- <div class="card" style="width: 18rem;">
-          <img class="card-img-top" src="..." alt="Card image cap">
-          <div class="card-body">
-            <h5 class="card-title">Hey, it's a card title!!!</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div> -->
-      </div>
-
-        <!-- <div class = "btn btn-primary center-block" button id="predict_button">Get Prediction.</div>
-        <div id="result"></div> -->
-        
-        
-        <!-- <div class = "btn btn-primary btn-xl rounded-pill mt-5" button id="predict_button">Get Recommendations!</div> -->
-        <!-- <a href="#" id="get_recd" class="btn btn-primary center-block mx-auto">Get Recommendations!</a> -->
-      
-        
-        <!-- <div class="col-xl-8 col-lg-7">
-          <img class="img-fluid mb-3 mb-lg-0" src="img/bg-masthead.jpg" alt="">
-        </div> -->
-
-        <!-- <div class="col-xl-4 col-lg-5">
-          <div class="featured-text text-center text-lg-left">
-            <h4>Shoreline</h4>
-            <p class="text-black-50 mb-0">Grayscale is open source and MIT licensed. This means you can use it for any project - even commercial projects! Download it, customize it, and publish your website!</p>
-          </div>
-        </div> -->
-
-      <!-- </div> -->
-
-      <!-- Project One Row -->
-      <!-- <div class="row justify-content-center no-gutters mb-5 mb-lg-0">
-        <div class="col-lg-6">
-          <img class="img-fluid" src="img/demo-image-01.jpg" alt="">
-        </div>
-        <div class="col-lg-6">
-          <div class="bg-black text-center h-100 project">
-            <div class="d-flex h-100">
-              <div class="project-text w-100 my-auto text-center text-lg-left">
-                <h4 class="text-white">Misty</h4>
-                <p class="mb-0 text-white-50">An example of where you can put an image of a project, or anything else, along with a description.</p>
-                <hr class="d-none d-lg-block mb-0 ml-0">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> -->
-
-      <!-- Project Two Row -->
-      <!-- <div class="row justify-content-center no-gutters">
-        <div class="col-lg-6">
-          <img class="img-fluid" src="img/demo-image-02.jpg" alt="">
-        </div>
-        <div class="col-lg-6 order-lg-first">
-          <div class="bg-black text-center h-100 project">
-            <div class="d-flex h-100">
-              <div class="project-text w-100 my-auto text-center text-lg-right">
-                <h4 class="text-white">Mountains</h4>
-                <p class="mb-0 text-white-50">Another example of a project with its respective description. These sections work well responsively as well, try this theme on a small screen!</p>
-                <hr class="d-none d-lg-block mb-0 mr-0">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> -->
-
-      <!-- <div class=pg13> -->
-        <!-- <h1>Surfer groups</h1> -->
-        <!-- {% for table in tables %} -->
-          <!-- <h2>{{titles[loop.index]}}</h2> -->
-          <!-- {{titles[loop.index]}} -->
-          <!-- {{ table|safe }} -->
-        <!-- {% endfor %} -->
-      <!-- </div> -->
-
-
+      <hr>
+      <br><br>
     </div>
   </section>
-
-  <!-- Signup Section -->
-  <!-- <section id="signup" class="signup-section">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-10 col-lg-8 mx-auto text-center">
-
-          <i class="far fa-paper-plane fa-2x mb-2 text-white"></i>
-          <h2 class="text-white mb-5">Subscribe to receive updates!</h2>
-
-          <form class="form-inline d-flex">
-            <input type="email" class="form-control flex-fill mr-0 mr-sm-2 mb-3 mb-sm-0" id="inputEmail" placeholder="Enter email address...">
-            <button type="submit" class="btn btn-primary mx-auto">Subscribe</button>
-          </form>
-
-        </div>
-      </div>
-    </div>
-  </section> -->
-
-
-  <br>
-  <h2>BUTTON WITH DROPDOWN MENU</h2>
-  <div class="dropdown" id='dd_comics'>
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Select Your Favorite Comic!
-    </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        {% for colour in colours %}
-        <a class="dropdown-item">{{colour}}</a>
-        {% endfor %}
-      <!-- <a class="dropdown-item" href="#">Action</a>
-      <a class="dropdown-item" href="#">Another action</a>
-      <a class="dropdown-item" href="#">Something else here</a> -->
-    </div>
-  </div>
-
-  <br>
-  <h2>INPUT BUTTON WITH DROPDOWN?? (Chosen plugin)</h2>
-
-  <div>
-      <select id="fave0" data-placeholder="Choose a podcast.." class="chosen-select-deselect full-width" tabindex="-1" style="display: none;">
-          <option value=""></option>
-          
-          <option value="1052">"A Tale of Two Cities" Audiobook (Audio book)</option>
-          
-          <option value="1056">"Adventures of Huckleberry Finn" Audiobook (Audio book)</option>
-          
-          <option value="1297">"He's Just Not That Into You: Ten Chick Flick Cliches that are NOT in this movie"</option>
-          
-          <option value="1387">"Walking The Floor" with Chris Shiflett</option>
-          
-          <option value="1790">#WeThePeople LIVE</option>
-          
-      </select><div class="chosen-container chosen-container-single" title="" id="fave0_chosen" style="width: 168px;"><a class="chosen-single chosen-default"><input class="chosen-search-input" type="text" autocomplete="off" tabindex="2">
-
-        <span>Choose a podcast..</span>
-        <div><b></b></div>
-        </a>
-        <div class="chosen-drop">
-        <div class="chosen-search">
-        </div>
-        <ul class="chosen-results"><li class="active-result" data-option-array-index="1" style="">"A Tale of Two Cities" Audiobook (Audio book)</li>
-        <li class="active-result" data-option-array-index="2" style="">"Adventures of Huckleberry Finn" Audiobook (Audio book)</li>
-        <li class="active-result" data-option-array-index="3" style="">"He's Just Not That Into You: Ten Chick Flick Cliches that are NOT in this movie"</li>
-        <li class="active-result" data-option-array-index="4" style="">"Walking The Floor" with Chris Shiflett</li>
-        <li class="active-result" data-option-array-index="5" style="">#WeThePeople LIVE</li>
-        <li class="active-result" data-option-array-index="6" style="">...These Are Their Stories: The Law &amp; Order Podcast</li>
-        </ul>
-        </div></div>
-        </div>
-                
-    <!-- <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Dropdown button
-    </button> -->
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-      <a class="dropdown-item" href="#">Action</a>
-      <a class="dropdown-item" href="#">Another action</a>
-      <a class="dropdown-item" href="#">Something else here</a>
-    </div>
-  </div>
 
   <!-- Contact Section -->
   <section class="contact-section bg-black">
     <div class="container">
-
-      <div class="row">
-
-        <div class="col-md-4 mb-3 mb-md-0">
-          <div class="card py-4 h-100">
-            <div class="card-body text-center">
-              <i class="fas fa-map-marked-alt text-primary mb-2"></i>
-              <h4 class="text-uppercase m-0">Address</h4>
-              <hr class="my-4">
-              <div class="small text-black-50">4923 Market Street, Orlando FL</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-4 mb-3 mb-md-0">
-          <div class="card py-4 h-100">
-            <div class="card-body text-center">
-              <i class="fas fa-envelope text-primary mb-2"></i>
-              <h4 class="text-uppercase m-0">Email</h4>
-              <hr class="my-4">
-              <div class="small text-black-50">
-                <a href="#">hello@yourdomain.com</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-4 mb-3 mb-md-0">
-          <div class="card py-4 h-100">
-            <div class="card-body text-center">
-              <i class="fas fa-mobile-alt text-primary mb-2"></i>
-              <h4 class="text-uppercase m-0">Phone</h4>
-              <hr class="my-4">
-              <div class="small text-black-50">+1 (555) 902-8832</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="social d-flex justify-content-center">
-        <a href="#" class="mx-2">
-          <i class="fab fa-twitter"></i>
+      <div class="social d-flex justify-content-center" style="font-size: 48px;">
+        <a href="https://github.com/MangrobanGit" class="mx-2">
+          <i class="fab fa-linkedin-in"></i>
         </a>
-        <a href="#" class="mx-2">
-          <i class="fab fa-facebook-f"></i>
-        </a>
-        <a href="#" class="mx-2">
+        <a href="https://www.linkedin.com/in/werlindo/" class="mx-2">
           <i class="fab fa-github"></i>
         </a>
       </div>
 
     </div>
+
   </section>
 
   <!-- Footer -->
-  <footer class="bg-black small text-center text-white-50">
+  <footer class="bg-black large text-center text-white-50">
     <div class="container">
-      Copyright &copy; Werlindo 2019
+      Copyright &copy; Werlindo Mangrobang 2019
+      <br><br><br><br>
+      <div class="small text-white-50">
+        Cover Photo by Lena Rose on Unsplash
+      </div>
     </div>
   </footer>
 
@@ -477,11 +159,17 @@
   <script src="js/grayscale.min.js"></script>
 
   <!-- This is the part where I break my page -->
-      <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
 
 </body>
 
