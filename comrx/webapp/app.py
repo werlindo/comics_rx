@@ -51,21 +51,22 @@ def index():
     comics = pd.read_csv('./comrx/webapp/templates/dev_files/top_100_comics.csv')
     ids = comics['comic_id'].tolist()
     titles = comics['comic_title'].tolist()
-    comics_dd = comics.loc[:,['comic_title','img_url']].copy()
+    comics_dd = comics.loc[:, ['comic_id', 'comic_title', 'img_url']].copy()
     #com_deets = comics_dd.to_dict(orient='dict')
     com_deets = []
     for i, row in comics_dd.iterrows():
-        com_deets.append((row['comic_title'], row['img_url']))
+        com_deets.append((row['comic_id'],row['comic_title'], row['img_url']))
     
-    dict_urls = dict(com_deets)
+    #dict_urls = dict(com_deets)
 
     return render_template(
                            'comic_recs.html',
                            colours=colours,
                            titles=titles,
                            rec_data2=rec_data,
-                           com_deets=com_deets,
-                           dict_urls=dict_urls
+                           com_deets=com_deets
+                           #,
+                           #dict_urls=dict_urls
                            )
 
 # def dropdown():

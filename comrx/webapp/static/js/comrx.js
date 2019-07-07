@@ -10,13 +10,13 @@
        $('#value').html(selected.val()); 
        $('#foo').html(selected.data('foo')); 
        $('#url').html(selected.data('url')); 
-       
+       $('#comic_id').html(selected.data('comic_id')); 
     }).change();
     
 
     $("#comic_input").change(function(){ 
         var element = $(this).find('option:selected'); 
-        var myTag = element.attr("data-foo"); 
+        var myTag = element.attr("data-url"); 
         var image = document.getElementById("preview");
         image.src = myTag; 
     }); 
