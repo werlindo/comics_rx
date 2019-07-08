@@ -56,6 +56,14 @@ My vision for the initial deployment is to have a website for current, or potent
 
 Eventually, I think it would be great to somehow integrate it into the store’s data/system so store employees can use it to augment their own expert opinion in creating their ‘associations’.
 
+#### _Execution_
+The intial deployment is in form or a web application. In can be found at [www.somesite.com](www.somesite.com)!
+
+In order to recreate the project do the following:
+- TBD
+- TBD
+- TBD
+
 ### User Story
 Henry is a currently a box subscriber at Arcane Comics & More. He has opted-in to Assocations as a way to automatically keep in the loop with new titles on the horizon. The store does a great job for the most part of subscribing him to titles that align with his current reading interests. This is a great value to him because he doesn't have much additional free time to do things like read up on new titles his favorite publishers or writers are developing. He wonders, though,if there is a way to get recommendations on comic books that may have already been published but he hasn't noticed yet.
 
