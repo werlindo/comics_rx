@@ -57,7 +57,7 @@ My vision for the initial deployment is to have a website for current, or potent
 Eventually, I think it would be great to somehow integrate it into the store’s data/system so store employees can use it to augment their own expert opinion in creating their ‘associations’.
 
 #### _Execution_
-The intial deployment is in form or a web application. In can be found at [www.comics-rx.com](www.comics-rx.com)!
+The intial deployment is in form or a web application. In can be found at [http://www.comics-rx.com](http://www.comics-rx.com)!
 
 In order to recreate the project do the following:
 - TBD
