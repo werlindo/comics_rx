@@ -7,6 +7,7 @@ app = Flask(__name__, static_url_path="")
 
 comic_factors = pd.read_pickle('./comrx/dev/support_data/comics_factors.pkl')
 
+
 @app.route('/', methods=['GET'])
 def index():
     """Return the main page."""
@@ -24,6 +25,7 @@ def index():
                            com_deets=com_deets
                            )
 
+
 @app.route('/recommend', methods=['GET', 'POST'])
 def recommend():
     """Return recomendations."""
@@ -32,7 +34,7 @@ def recommend():
     reading_list = []
     reading_list.append(int(data['comic_input']))
     reading_list.append(int(data['comic_input_2']))
-    reading_list.append(int(data['comic_input_3']))    
+    reading_list.append(int(data['comic_input_3']))
 
     results = make_n_comic_recommendations(comics=reading_list,
                                            comic_factors=comic_factors,
