@@ -21,6 +21,22 @@
         image.src = myTag; 
     }); 
 
+    $("#comic_input_2").change(function(){ 
+        var element = $(this).find('option:selected'); 
+        var myTag = element.attr("data-url"); 
+        var image = document.getElementById("preview_2");
+        image.src = myTag; 
+    }); 
+
+    $("#comic_input_3").change(function(){ 
+        var element = $(this).find('option:selected'); 
+        var myTag = element.attr("data-url"); 
+        var image = document.getElementById("preview_3");
+        image.src = myTag; 
+    }); 
+
+
+
 //     function setImage(select){
 //         // var image = document.getElementById("preview")[0];
 //         var image = document.getElementById("preview");

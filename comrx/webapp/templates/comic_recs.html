@@ -68,17 +68,13 @@
         req.bind('complete', show_recommendations)
         req.open('POST', '/recommend', True)
         req.set_header('content-type','application/json')
-        data = json.dumps({'comic_input': document['comic_input'].value})
+        data = json.dumps({'comic_input': document['comic_input'].value,
+                           'comic_input_2': document['comic_input_2'].value,                                            
+                           'comic_input_3': document['comic_input_3'].value,
+                           'num_recs': document['num_recs'].value})                                             
         req.send(data) 
 
     document["recom_button"].bind("click", get_recommendations) 
-
-    #def get_img_url(ev):
-    #    uurl = dict_urls['document['comic_input'].value]
-    #    document['preview'].src = uurl                                                
-
-    #document["comic_input"].bind("change", get_img_url)
-
 
   </script>
 
@@ -98,8 +94,8 @@
   <section id="projects" class="projects-section bg-light">
     <div class="container align-items-center text-center">
       <!-- User Input - Comic 1 -->
-      <h1>Select Your Favorite Comic!</h1>
-
+      <h1>Select Your Favorite 3 Comic!</h1>
+      <br>
       <div class="row align-items-center">
         <div class="card mx-auto" style="width: 20rem;">
           <div class="card-body align-items-center">
@@ -115,11 +111,46 @@
             <img class="mx-auto d-block card-img-top" id="preview">
           </div>
         </div>
+        <div class="card mx-auto" style="width: 20rem;">
+          <div class="card-body align-items-center">
+              <!-- onchange="setImage(this);" -->
+              <!-- onchange="document.getElementById('preview').src = this.options[this.selectedIndex].data-foo" -->
+              <!-- onchange="document.getElementById('preview').src = this.foo" -->
+            <select id="comic_input_2" name=comics_select_2 method="GET" action="/" >
+              {% for deet in com_deets %}
+              <option value="{{deet[0]}}" data-comic_id = {{deet[0]}} data-url="{{deet[2]}}">{{deet[1]}}</option>
+              {% endfor %}
+            </select>
+            <br><br>
+            <img class="mx-auto d-block card-img-top" id="preview_2">
+          </div>
+        </div>
+        <div class="card mx-auto" style="width: 20rem;">
+          <div class="card-body align-items-center">
+              <!-- onchange="setImage(this);" -->
+              <!-- onchange="document.getElementById('preview').src = this.options[this.selectedIndex].data-foo" -->
+              <!-- onchange="document.getElementById('preview').src = this.foo" -->
+            <select id="comic_input_3" name=comics_select_3 method="GET" action="/" >
+              {% for deet in com_deets %}
+              <option value="{{deet[0]}}" data-comic_id = {{deet[0]}} data-url="{{deet[2]}}">{{deet[1]}}</option>
+              {% endfor %}
+            </select>
+            <br><br>
+            <img class="mx-auto d-block card-img-top" id="preview_3">
+          </div>
+        </div>
       </div>
-      <p>The selected item is <span id="text"></span> with a value of <span id="value"></span> and url of <span id="url"></span> and an id of <span id="comic_id"></span>.</p>
-      <br><br><br>
-      <!--Recommendation Button-->
+      <!-- <p>The selected item is <span id="text"></span> with a value of <span id="value"></span> and url of <span id="url"></span> and an id of <span id="comic_id"></span>.</p> -->
       <br><br>
+      <p>
+        <label class="font-weight-bold"><b>Number of Recommendations (1-20):</b></label>
+        <input type="range" id="num_recs" value="6" min="1" max="20" 
+            oninput="document.getElementById('nrecs').innerHTML = this.value" />
+        <label id="nrecs"></label>
+    </p>
+      <br><br>
+
+      <!--Recommendation Button-->
       <div class="btn btn-primary center-block" button id="recom_button">Get Recommendations!</div>
       <br><br>
       <div id="recs"></div>
@@ -133,10 +164,10 @@
   <section class="contact-section bg-black">
     <div class="container">
       <div class="social d-flex justify-content-center" style="font-size: 48px;">
-        <a href="https://github.com/MangrobanGit" class="mx-2">
+        <a href="https://www.linkedin.com/in/werlindo/" class="mx-2">
           <i class="fab fa-linkedin-in"></i>
         </a>
-        <a href="https://www.linkedin.com/in/werlindo/" class="mx-2">
+        <a href="https://github.com/MangrobanGit" class="mx-2">
           <i class="fab fa-github"></i>
         </a>
       </div>

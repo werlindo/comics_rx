@@ -31,10 +31,12 @@ def recommend():
 
     reading_list = []
     reading_list.append(int(data['comic_input']))
+    reading_list.append(int(data['comic_input_2']))
+    reading_list.append(int(data['comic_input_3']))    
 
     results = make_n_comic_recommendations(comics=reading_list,
                                            comic_factors=comic_factors,
-                                           top_n=6)
+                                           top_n=int(data['num_recs']))
 
     response = make_response(results.to_json(orient='records'))
     return response
