@@ -34,7 +34,7 @@ def recommend():
     reading_list = []
     reading_list.append(int(data['comic_input']))
     reading_list.append(int(data['comic_input_2']))
-    reading_list.append(int(data['comic_input_3']))
+    reading_list.append(int(data['comic_input_3'])
 
     results = make_n_comic_recommendations(comics=reading_list,
                                            comic_factors=comic_factors,
