@@ -19,7 +19,7 @@ In the example above “Savage Avengers” is being recommended to those who sub
 After discussing it with the shop manager, it turns out this process is completely human-driven. Our goal is to build a comic book recommendation system that performs a similar task: to recommend comics titles to a customer (existing and new) based on their current preferences. For current customers this could simply be a replica of their current subscriptions (or more)! For new customers this could be a list of their favorite comic titles.
 
 ### Data Understanding
-With the help of Arcane Comics we obtained a set of de-identified data of comic books titles sold since they implemented their current point-of-sale system in Feb 2010. 
+With the help of Arcane Comics we obtained a subset of de-identified data of comic books titles sold since they implemented their current point-of-sale system in Feb 2010. While this data has been de-identified of customer information, since it is also relevant to the business activities of a private entity, every effort has been made to limit public exposure of business-sensitive data.
 
 We built an implicit-ratings matrix based on this information. Because buyers at brick-and-mortar stores don’t usually review their books, we proxied their ‘review’ with the fact that they purchased the item. The transaction data provides customer id, date of purchase, and specific issue (e.g. Batman #123). There are some limitations that we will discuss further below.
 
@@ -43,13 +43,14 @@ We used ALS matrix factorization method to build the base algorithm via (Py)Spar
 ### Evaluation
 We used grid search and k-fold cross-validation for parameter searching and tuning. We used RMSE as our error metric.
 
-In addition to
+In addition to 'technical' evaluation, we plan like to test the recommendations with domain experts such as Arcane Comics and other comic enthusiasts.
 
 ### Deployment
 Our application is a website [www.comics-rx.com](www.comics-rx.com) where a customer can identify 3 of their favorite comics and be offered 1-20 recommendations.
 
 Future enhancement goals inlcude:
-- Allow for a more flexible number of favorite comics to be identified to get recommendations.
+- Allow for a more flexible number of favorite comics to be identified to get recommendations (versus a fixed number of inputs).
+- Create a method for user to send direct feedback regarding recommendations, e.g. recording user interactions to a database. In lieu of that, contact links are available at the footer of the website.
 - Include links in recommendations for users to get synopses of the recommended comic(s).
 
 ### User Story

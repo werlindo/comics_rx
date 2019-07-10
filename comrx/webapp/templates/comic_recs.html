@@ -23,8 +23,14 @@
   <!-- Custom fonts for this template -->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
   <!-- <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet"> -->
-  <link href="https://fonts.googleapis.com/css?family=Nunito+display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Hind&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Boogaloo|Hind|Luckiest+Guy|Permanent+Marker|Russo+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Hind|Luckiest+Guy|Permanent+Marker|Russo+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Hind|Luckiest+Guy|Permanent+Marker|Russo+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Luckiest+Guy|Permanent+Marker|Russo+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Permanent+Marker|Russo+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Russo+One&display=swap" rel="stylesheet">
+  <!-- <link href="https://fonts.googleapis.com/css?family=Hind&display=swap" rel="stylesheet"> -->
+  <!-- <link href="https://fonts.googleapis.com/css?family=Nunito+display=swap" rel="stylesheet"> -->
   <link
     href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
     rel="stylesheet">
@@ -149,7 +155,7 @@
         <label class="font-weight-bold"><b>Number of Recommendations (1-20):</b></label>
         <input type="range" id="num_recs" value="6" min="1" max="20" 
             oninput="document.getElementById('nrecs').innerHTML = this.value" />
-        <label id="nrecs"></label>
+        <label id="nrecs">6</label>
     </p>
       <br><br>
 
@@ -159,15 +165,18 @@
       <div id="recs"></div>
       <br><br>
       <hr>
-      <br><br>
-    </div>
+      <div class="align-items-center">
+        <a href = "mailto: werlindo.mangrobang@gmail.com">Let us know what you think!</a>
+        <br><br>
+      </div>
   </section>
-
+  <p></p>
   <!-- Contact Section -->
   <section class="contact-section bg-black">
-    <div class="container">
-      <div class="social d-flex justify-content-center" style="font-size: 36px;">
-        <a href="https://www.linkedin.com/in/werlindo/" class="mx-2">
+    <div class="container text-white-50 align-items-center">
+        <h1 align="center"><b>Get In Touch!</b></h1>
+        <div class="social d-flex justify-content-center text-white-50" style="font-size: 36px;">
+          <a href="https://www.linkedin.com/in/werlindo/" class="mx-2">
           <i class="fab fa-linkedin-in"></i>
         </a>
         <a href="https://github.com/MangrobanGit" class="mx-2">
@@ -176,6 +185,9 @@
         <a href="https://medium.com/@werlindo" class="mx-2">
           <i class="fab fa-medium"></i>
         </a>
+        <a href="mailto:werlindo.mangrobang@gmail.com" class="mx-2">
+          <i class="fa fa-envelope"></i>
+        </a>
       </div>
 
     </div>
@@ -183,7 +195,7 @@
   </section>
 
   <!-- Footer -->
-  <footer class="bg-black medium text-center text-white-50">
+  <footer class="bg-black text-center text-white-50">
     <div class="container">
       Copyright &copy; Werlindo Mangrobang 2019
       <br><br><br><br>
