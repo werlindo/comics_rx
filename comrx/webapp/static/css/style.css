@@ -10,3 +10,12 @@
 }
 
 select { width: 18em }
+
+.card {
+    transform: translateY(0px);
+    transition: .5s;
+ }
+ .card:hover {
+    transform: translateY(-5px);
+    transition: .5s;
+ }
