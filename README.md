@@ -71,10 +71,10 @@ In order to recreate the project do the following:
 - Tastes  
     - We modeled on all data available since 2010. However, we did not make any specific adjustments for tastes changing. As an example, a series a customer was into in 2010 may not be relevant to their current tastes; we simply assumed all history was equally important. We would like to further explore this idea, perhaps by limiting the time period of the data.
 - Modeling  
-    - We were also limited in the resources we applied in running our ALS model; we limited ourselves to using a modern laptop to run Spark locally. We would like to explore moving to a resource such as DataBricks or Amazon EMR to potentially explore a larger dataset and wider variety of hyperparameters.
+    - We were also limited in the resources we applied in running our ALS model; we limited ourselves to using a current laptop to run Spark locally and small AWS EC2 instances. We would like to explore moving to a resource such as DataBricks or Amazon EMR to potentially explore a larger dataset and wider variety of hyperparameters.
     - We also did not explore any alternative cold start strategies, i.e. We could potentially frame this as a multi-classification problem using gradient boosting.
 - Enhancements  
-    - A tool isn't useful if it doesn't meet the user's needs. We are currently gathering feedback from testers, but there are a number of features we consider to be table stakes for this kind of apps that still need to be built.
+    - A tool isn't useful if it doesn't meet the user's needs. We are currently gathering feedback from testers, but there are a number of features we consider to be table stakes for this UX of kind of app, that still need to be built.
         - Non-blurry images for comics.
         - Links to resources (e.g. wikis) for recommended comics.
         - A way to save your recommendations.

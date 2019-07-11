@@ -5,7 +5,7 @@ comic_id,comic_title,img_url
 278,Animal Man (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/animal_man.jpg
 319,Aquaman (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/aquaman.jpg
 388,Astonishing X-Men (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/astonishing_x-men.jpg
-433,Avengers (2010) (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/_no_cover_.jpg
+433,Avengers (2010) (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/avengers_(2010).jpg
 455,Avengers (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/avengers.jpg
 552,Batgirl (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/batgirl.jpg
 610,Batman (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/batman.jpg
@@ -17,7 +17,7 @@ comic_id,comic_title,img_url
 829,Black Panther (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/black_panther.jpg
 838,Black Science (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/black_science.jpg
 960,Brightest Day (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/brightest_day.jpg
-992,Btvs Season 9 Freefall (Dark Horse),https://comrx.s3-us-west-2.amazonaws.com/covers/_no_cover_.jpg
+992,Btvs Season 9 Freefall (Dark Horse),https://comrx.s3-us-west-2.amazonaws.com/covers/btvs_season_9.jpg
 1077,Captain America (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/captain_america.jpg
 1143,Catwoman (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/catwoman.jpg
 1214,Chew (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/chew.jpg
@@ -59,7 +59,7 @@ comic_id,comic_title,img_url
 4455,New Avengers (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/new_avengers.jpg
 4503,Nightwing (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/nightwing.jpg
 4632,Old Man Logan (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/old_man_logan.jpg
-4677,Outcast By Kirkman & Azaceta (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/_no_cover_.jpg
+4677,Outcast By Kirkman & Azaceta (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/Outcast_by_kirkman_&_Azaceta.jpg
 4701,Paper Girls (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/paper_girls.jpg
 4919,Rachel Rising (Other),https://comrx.s3-us-west-2.amazonaws.com/covers/rachel_rising.jpg
 5196,Saga (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/saga.jpg
@@ -72,8 +72,8 @@ comic_id,comic_title,img_url
 5506,Sixth Gun (Oni),https://comrx.s3-us-west-2.amazonaws.com/covers/sixth_gun.jpg
 5600,Southern Bastards (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/southern_bastards.jpg
 5659,Spider-Man Deadpool (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/spider-man_deadpool.jpg
-5836,Star Wars (Dark Horse),https://comrx.s3-us-west-2.amazonaws.com/covers/star_wars.jpg
-5882,Star Wars (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/star_wars.jpg
+5836,Star Wars (Dark Horse),https://comrx.s3-us-west-2.amazonaws.com/covers/star_wars_dark_horse.jpg
+5882,Star Wars (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/star_wars_marvel.jpg
 5992,Suicide Squad (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/suicide_squad.jpg
 6019,Supergirl (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/supergirl.jpg
 6036,Superior Spider-Man (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/superior_spider-man.jpg
@@ -93,7 +93,7 @@ comic_id,comic_title,img_url
 6722,Unwritten (Vertigo),https://comrx.s3-us-west-2.amazonaws.com/covers/unwritten.jpg
 6761,Venom (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/venom.jpg
 6824,Walking Dead (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/walking_dead.jpg
-6937,Wicked & Divine (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/_no_cover_.jpg
+6937,Wicked & Divine (Image),https://comrx.s3-us-west-2.amazonaws.com/covers/wicked_divine.jpg
 6987,Wolverine and X-Men (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/wolverine_and_x-men.jpg
 7021,Wonder Woman (DC),https://comrx.s3-us-west-2.amazonaws.com/covers/wonder_woman.jpg
 7079,X-Factor (Marvel),https://comrx.s3-us-west-2.amazonaws.com/covers/x-factor.jpg
