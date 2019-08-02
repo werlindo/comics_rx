@@ -28,7 +28,7 @@ With the help of Arcane Comics we obtained a subset of de-identified data of com
 
 We built an implicit-ratings matrix based on this information. Because buyers at brick-and-mortar stores don't usually review their books, we proxied their 'review' with the fact that they purchased the item. The transaction data provides customer id, date of purchase, and specific issue (e.g. Batman #123). There are some limitations that we will discuss further below.
 
-One weakness in the data was the inability to easily link sold issues to their specific volumes. This is important because comic books are notorious for being 're-booted' frequently. And each re-boot, may have different creative teams, characters, etc. For example, according to [www.comicbookdb.com](http://www.comicbookdb.com/search.php?form_search=Amazing%20Spider-Man&form_searchtype=Title), _The Amazing Spider-Man_ has distinct volumes in both 2015 and 2018.  
+One weakness in the data was the inability to easily link sold issues to their specific volumes. This is important because comic books are notorious for being 're-booted' frequently. And each re-boot may have different creative teams, characters, etc. For example, according to [www.comicbookdb.com](http://www.comicbookdb.com/search.php?form_search=Amazing%20Spider-Man&form_searchtype=Title), _The Amazing Spider-Man_ has distinct volumes in both 2015 and 2018.  
 
 ### Data Preparation
 Since the data originated from a point-of-sale system, it was already clean. The primary task was to prune down the data for accounts (i.e., customers) such as:
@@ -53,11 +53,6 @@ In addition to 'technical' evaluation, we plan like to test the recommendations 
 ### Deployment
 Our application is a website [www.comics-rx.com](www.comics-rx.com) where a customer can identify 3 of their favorite comics and be offered 1-20 recommendations.
 
-Future enhancement goals inlcude:
-- Allow for a more flexible number of favorite comics to be identified to get recommendations (versus a fixed number of inputs).
-- Create a method for the user to send direct feedback regarding recommendations, e.g. recording user interactions to a database. In lieu of that, contact links are available at the footer of the website.
-- Include links in recommendations for users to get synopses of the recommended comic(s).
-
 ### Execution
 The initial deployment is in form or a web application. It can be found at [http://www.comics-rx.com](http://www.comics-rx.com)!
 
@@ -75,10 +70,12 @@ In order to recreate the project do the following:
     - We also did not explore any alternative cold start strategies, i.e. We could potentially frame this as a multi-classification problem using gradient boosting.
 - Enhancements  
     - A tool isn't useful if it doesn't meet the user's needs. We are currently gathering feedback from testers, but there are a number of features we consider to be table stakes for this UX of kind of app, that still need to be built.
-        - Non-blurry images for comics.
-        - Links to resources (e.g. wikis) for recommended comics.
-        - A way to save your recommendations.
-        - A link to purchase recommended comics.
+        - Future enhancement goals include:
+            - Allow for a more flexible number of favorite comics to be identified to get recommendations (versus a fixed number of inputs).
+            - Create a method for the user to send direct feedback regarding recommendations, e.g. recording user interactions to a database. In lieu of that, contact links are available at the footer of the website.
+            - Include links in recommendations for users to get synopses of the recommended comic(s).
+            - Non-blurry images for comics.
+            - A link to purchase recommended comics.
 - Roadmap
     - The first iteration would be to incorporate the 'Enhancements' mentioned above.
     - Second, if this app were to be used on the vendor side, it would be most useful if it were to easily ingest customer preferences, e.g. a list of favorite comics or comics they subscribe to. As of now, all inputs are manual. This would require some sort of API between a vendors POS system and the app.
