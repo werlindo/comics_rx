@@ -34,7 +34,10 @@ def scrape_series_covers(browser, titles):
 
             # Once in cover gallery, just scrape the first image
             try:
-                get_first_image(browser, title)
+#                 get_first_image(browser, title)
+                click_first_image(browser)
+            #    click_cover_image(browser)
+                save_large_image(browser, title)
                 print("Scraped {}.{}!".format(idx, title))
             except NoSuchElementException:
                 print("{}.{} was skipped. No covers were found."
@@ -164,3 +167,50 @@ def go_back_home_comicbookdb(browser):
 
     # Click!
     logo_btn.click()
+    
+def click_first_image(browser):
+    """
+    Find first image in cover gallery and click it!
+    """
+    # Find first image
+    first_img_path = ('/html/body/table/tbody/tr[2]/td[3]/' +
+                      'table/tbody/tr[1]/td[1]/a/img')
+    first_img = browser.find_element_by_xpath(first_img_path)   
+    first_img.click()
+
+def click_cover_image(browser):
+    """
+    Find the cover image and click it!"""
+    cover_img_path = ('/html/body/table/tbody/tr[2]/td[3]/table/tbody/tr/' + 
+                      'td/table[1]/tbody/tr[1]/td[1]/a[1]/img')
+    cover_img = browser.find_element_by_xpath(cover_img_path)
+    cover_img.click()
+#    url = cover_img.get
+
+def save_large_image(browser, title):
+    """
+    Assuming you are on page with large cover image, scrape it
+    """
+#     cover_img_path = ('/html/body/img')
+#     cover_img = browser.find_element_by_xpath(cover_img_path)    
+
+    cover_box_path = ('/html/body/table/tbody/tr[2]/td[3]/table/tbody/tr/' + 
+                      'td/table[1]/tbody/tr[1]/td[1]/a[1]')
+    cover_box = browser.find_element_by_xpath(cover_box_path)
+    url = cover_box.get_attribute('href')
+    
+    # Construct path and file name
+    filename = ('./raw_data/covers_large/' + title.replace(' ', '_').lower()
+                + '.jpg'
+                )
+
+    # Save the file in the file/path
+    scrape_image_url(url, filename)
+    
+
+def scrape_image_url(url, filename):
+    """Save an image element as filename"""
+    response = requests.get(url)
+    img_data = response.content
+    with open(filename, 'wb') as f:
+        f.write(img_data)
