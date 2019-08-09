@@ -48,7 +48,7 @@ We used ALS matrix factorization method to build the base algorithm via (Py)Spar
 ### Evaluation
 We used grid search and k-fold cross-validation for parameter searching and tuning. We used RMSE as our error metric.
 
-In addition to 'technical' evaluation, we plan like to test the recommendations with domain experts such as Arcane Comics and other comic enthusiasts.
+In addition to 'technical' evaluation, we plan to test the recommendations with domain experts such as Arcane Comics and other comic enthusiasts.
 
 ### Deployment
 Our application is a website [www.comics-rx.com](www.comics-rx.com) where a customer can identify 3 of their favorite comics and be offered 1-20 recommendations.
