@@ -19,3 +19,8 @@ select { width: 18em }
     transform: translateY(-5px);
     transition: .5s;
  }
+
+
+ .nav-text {
+    vertical-align:middle;
+}
