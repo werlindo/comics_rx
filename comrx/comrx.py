@@ -96,8 +96,9 @@ def make_n_comic_recommendations(comics, comic_factors, top_n):
     cf['pred'] = cf['features'].apply(lambda x: np.dot(x, u))
 
     # Get recommendations
-    top_n_df = cf.sort_values(by=['pred'], ascending=False).head(top_n).copy()
+    top_n_df = cf.sort_values(by=['pred'], ascending=False).head(top_n + 3).copy()
     top_n_df.reset_index(inplace=True)
-    top_n_df = top_n_df.loc[:, ['comic_id', 'comic_title', 'img_url']].copy()
+    top_n_df = top_n_df.loc[:, ['comic_id', 'comic_title', 'img_url', 'pred']].copy()
+    top_n_df = top_n_df[~top_n_df['comic_id'].isin(comics)].head(top_n).copy()
 
     return top_n_df
