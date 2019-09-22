@@ -1,4 +1,5 @@
 # Libraries
+import numpy as np
 from pyspark.sql.types import StructType, StructField, LongType
 from pyspark.sql.functions import explode, isnan, col, lower
 from pyspark.sql import DataFrame
@@ -6,7 +7,6 @@ from pyspark.ml.recommendation import ALS
 import itertools
 import time
 from functools import reduce
-
 
 # Functions
 def get_top_n_recs_for_user(spark, model, topn=10):
@@ -464,3 +464,147 @@ def make_comic_recommendations(reading_list, top_n, comics_df, train_data,
 
     print('Total Runtime: {:.2f} seconds'.format(time.time() - start_time))
     return top_n_comics_df
+
+
+# For loop will automatically create and store ALS models
+def create_als_models_list(userCol, itemCol, ratingCol, ranks, max_iters
+                           ,reg_params, alphas, seed=1234):
+    """
+    Create list of ALS models based on combinations from lists of parameter
+    Returns:
+    List of ALS models (spark ML)
+    """
+    # Intiialize model list
+    model_list = []
+    
+    # Loop through params and create model for each param combination
+    for r in ranks:
+        for mi in max_iters:
+            for rp in reg_params:
+                for a in alphas:
+                    model_list.append(ALS(userCol=userCol
+                                          ,itemCol=itemCol
+                                          ,ratingCol=ratingCol
+                                          ,rank = r, maxIter = mi, regParam = rp
+                                          ,alpha = a
+                                          ,coldStartStrategy="drop"
+                                          ,nonnegative=True
+                                          ,implicitPrefs=True))
+    return model_list
+
+
+def calculate_ROEM(sql_context, predictions, user_col, rating_col):
+    """
+    Calculate Rank-Ordered Error Metric
+    Return:
+    ROEM metric (float)
+    """
+    #Creates predictions table that can be queried
+    predictions.createOrReplaceTempView("predictions") 
+
+    #Sum of total number of plays of all songs
+    denominator = predictions.groupBy().sum(rating_col).collect()[0][0]
+
+    #Calculating rankings of songs predictions by user
+    sql_string = ( "SELECT {}, {}, ".format(user_col, rating_col) +
+                  "PERCENT_RANK() OVER (PARTITION BY {} ORDER"
+                  .format(user_col) 
+                  + " BY prediction DESC) AS rank FROM predictions"
+                 )
+
+    sql_context.sql(sql_string).createOrReplaceTempView("rankings")
+
+    #Multiplies the rank of each song by the number of plays for each user
+    #and adds the products together
+    sql_string_2 = "SELECT SUM({} * rank) FROM rankings".format(rating_col)
+    
+    numerator = sql_context.sql(sql_string_2).collect()[0][0]
+    
+    return numerator / denominator
+
+
+def get_ROEMs(sql_context, model_list, train, test, user_col, rating_col):
+    """
+    Calculate Rank-Ordered Error Metric for a set of model
+    Returns:
+    List of ROEMs
+    """
+    # Init list for results
+    ROEMS = []
+    n = 1
+    start_time = time.time()
+    
+    # Loop through model data; fit, predict, and calc metrics
+    for model in model_list:
+        fitted_model = model.fit(train)
+        predictions = fitted_model.transform(test)
+        ROEM = calculate_ROEM(sql_context, predictions, user_col, rating_col)
+        
+        ROEMS.append(ROEM)
+        print ("Validation ROEM #{}: {}".format(n, ROEM))
+        n+=1     
+        
+    print ('Total Runtime: {:.2f} seconds'.format(time.time() - start_time))
+    
+    return ROEMS
+
+
+def get_best_model(errors_list, model_list):
+    """
+    Based on list of errors and list of models, return the model with 
+    the minimum error
+    Returns:
+    model object
+    """
+    # Find the index of the smallest ROEM
+    import numpy as np
+    
+    idx = np.argmin(errors_list)
+    print("Index of smallest error:", idx)
+
+    # Find ith element of ROEMS
+    print("Smallest error: ", errors_list[idx])
+
+    return model_list[idx]
+        
+
+def create_spark_5_fold_set(train, seed=1234):
+    """
+    Provided a spark dataframe return a list of 5 tuples, where each pair is a
+    test and train set for cross validation (pyspark dataframes)
+    """
+    #Building 5 folds within the training set.
+    train1, train2, train3, train4, train5 = (train.randomSplit(
+                                              [0.2, 0.2, 0.2, 0.2, 0.2]
+                                              ,seed=seed)
+                                            )
+    fold1 = train2.union(train3).union(train4).union(train5)
+    fold2 = train3.union(train4).union(train5).union(train1)
+    fold3 = train4.union(train5).union(train1).union(train2)
+    fold4 = train5.union(train1).union(train2).union(train3)
+    fold5 = train1.union(train2).union(train3).union(train4)
+    
+    # Create list of tuples of CV pairs
+    foldlist = [(fold1, train1), (fold2, train2), (fold3, train3)
+            , (fold4, train4), (fold5, train5)]
+
+    return foldlist   
+
+def perform_cv(folds, model, sql_context, user_col, rating_col):
+    """
+    """
+    errors = []
+    
+    for ft_pair in folds:
+
+        # Fits model to fold within training data
+        fitted_model = model.fit(ft_pair[0])
+
+        # Generates predictions using fitted_model on respective CV test data
+        predictions = fitted_model.transform(ft_pair[1])
+
+        # Generates and prints a ROEM metric CV test data
+        error = calculate_ROEM(sql_context, predictions, user_col, rating_col)
+        errors.append(error)
+    
+    return errors   
