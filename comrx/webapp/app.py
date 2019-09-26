@@ -6,7 +6,8 @@ from ..comrx import make_n_comic_recommendations
 app = Flask(__name__, static_url_path="")
 
 #comic_factors = pd.read_pickle('./comrx/dev/support_data/comics_factors_201908.pkl')
-comic_factors = pd.read_pickle('./comrx/dev/support_data/comics_factors_20190916.pkl')
+#comic_factors = pd.read_pickle('./comrx/dev/support_data/comics_factors_20190916.pkl')
+comic_factors = pd.read_pickle('./comrx/dev/support_data/comics_factors_20190922.pkl')
 
 @app.route('/', methods=['GET'])
 def index():
